@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Detective Adventure for GRE Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter','Helvetica Neue',sans-serif;
+  background:#111318;color:#c0c6d0;line-height:1.7;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:radial-gradient(ellipse at 50% 30%,rgba(30,35,50,.4) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+.ambient{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.08}
+.b1{width:500px;height:500px;background:#4a6fa5;top:-5%;left:-8%}
+.b2{width:420px;height:420px;background:#6b7fa8;bottom:10%;right:-6%}
+.b3{width:300px;height:300px;background:#5a6f8f;top:50%;left:40%}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:60px 28px 80px}
+
+/* Hero */
+.hero{text-align:center;margin-bottom:64px}
+.hero-label{font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.25em;color:rgba(210,175,100,.5);margin-bottom:20px}
+.hero-title{font-family:'Fredoka',sans-serif;font-size:2.6rem;font-weight:600;line-height:1.25;color:#eaedf2;margin-bottom:14px}
+.hero-title em{font-style:normal;background:linear-gradient(135deg,#d4a84a,#e8c878);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.05rem;font-weight:300;color:rgba(192,198,208,.55);max-width:540px;margin:0 auto 28px;line-height:1.8}
+.hero-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.tag{font-size:.72rem;font-weight:500;padding:5px 14px;border-radius:20px;background:rgba(210,175,100,.08);border:1px solid rgba(210,175,100,.14);color:rgba(220,190,120,.6);letter-spacing:.04em}
+
+/* Card */
+.card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:36px 32px;margin-bottom:24px}
+.sec-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.22em;color:rgba(210,175,100,.5);margin-bottom:16px}
+.sec-title{font-family:'Fredoka',sans-serif;font-size:1.4rem;font-weight:500;color:#dce0e8;margin-bottom:14px}
+.body-text{font-size:1.02rem;font-weight:300;color:rgba(192,198,208,.78);line-height:1.85;margin-bottom:18px}
+.body-text:last-child{margin-bottom:0}
+.body-text strong{font-weight:500;color:rgba(225,230,240,.92)}
+.highlight{border-left:2px solid rgba(210,175,100,.3);padding-left:20px;font-size:1.02rem;font-weight:300;font-style:italic;color:rgba(220,195,130,.55);line-height:1.85;margin:20px 0}
+
+/* Collapsible */
+.collapsible{margin-top:16px}
+.collapse-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;color:rgba(210,180,110,.6);background:rgba(210,175,100,.06);border:1px solid rgba(210,175,100,.1);border-radius:10px;padding:9px 18px;cursor:pointer;transition:all .3s ease;letter-spacing:.03em}
+.collapse-btn:hover{background:rgba(210,175,100,.1);color:rgba(225,195,120,.8)}
+.collapse-btn .arrow{transition:transform .3s ease;font-size:.65rem}
+.collapse-btn.open .arrow{transform:rotate(90deg)}
+.collapse-body{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease;opacity:0}
+.collapse-body.open{opacity:1}
+.collapse-inner{padding:20px 0 4px}
+
+/* Mini cards */
+.mini-cards{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.mini-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:22px 24px}
+.mini-card-title{font-size:.98rem;font-weight:500;color:#d4d8e0;margin-bottom:8px}
+.mini-card-text{font-size:.95rem;font-weight:300;color:rgba(192,198,208,.68);line-height:1.8}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+.grid-cell{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:20px}
+.grid-cell-name{font-size:1rem;font-weight:500;color:#d8dce4;margin-bottom:6px}
+.grid-cell-desc{font-size:.9rem;font-weight:300;color:rgba(192,198,208,.58);line-height:1.7}
+
+/* Table */
+.theory-table{width:100%;border-collapse:collapse;margin-top:12px}
+.theory-table th{text-align:left;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:rgba(210,175,100,.45);padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.theory-table td{font-size:.92rem;font-weight:300;color:rgba(192,198,208,.68);padding:12px 14px;line-height:1.75;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top}
+.theory-table tr:last-child td{border-bottom:none}
+
+/* Image — inline rounded */
+.img-frame{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.06);margin:16px 0;background:rgba(255,255,255,.02)}
+.img-frame img{width:100%;display:block;filter:saturate(.7) brightness(.75) contrast(.95);opacity:.85;transition:all .4s ease}
+.img-frame img:hover{filter:saturate(.85) brightness(.85) contrast(1);opacity:.95}
+
+/* Standalone image (no card wrapper) */
+.img-standalone{margin:0 0 24px;border-radius:14px;overflow:hidden;display:block}
+.img-standalone img{display:block;width:auto;max-width:100%;border-radius:14px;filter:saturate(.7) brightness(.75) contrast(.95);opacity:.85;transition:all .4s ease}
+.img-standalone img:hover{filter:saturate(.85) brightness(.85) contrast(1);opacity:.95}
+
+/* Word list */
+.word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px;margin-top:12px}
+.word-chip{font-size:.88rem;font-weight:400;padding:9px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);color:rgba(192,198,208,.72);text-align:center}
+
+/* Slideshow */
+.slideshow{position:relative;margin:16px 0;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.2)}
+.slide-track{position:relative;width:100%;overflow:hidden}
+.slide-track img{width:100%;display:block;filter:saturate(.7) brightness(.75) contrast(.95);opacity:.85;transition:opacity .5s ease}
+.slide-controls{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+.slide-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(210,180,110,.6);border-radius:8px;padding:6px 14px;font-family:'Inter',sans-serif;font-size:.78rem;cursor:pointer;transition:all .3s ease;letter-spacing:.02em}
+.slide-btn:hover{background:rgba(210,175,100,.1);color:rgba(225,195,120,.8)}
+.slide-counter{font-size:.72rem;color:rgba(192,198,208,.35);letter-spacing:.04em}
+
+/* CTA */
+.cta-wrap{text-align:center;margin-top:48px}
+.cta-btn{display:inline-block;padding:15px 48px;border-radius:40px;background:rgba(210,175,100,.1);border:1.5px solid rgba(210,175,100,.22);color:rgba(225,200,140,.7);font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;letter-spacing:.06em;cursor:pointer;text-decoration:none;transition:all .3s ease}
+.cta-btn:hover{background:rgba(210,175,100,.18);border-color:rgba(210,175,100,.38);color:rgba(240,220,165,.9);transform:translateY(-2px)}
+.footer{text-align:center;margin-top:40px;font-size:.7rem;color:rgba(192,198,208,.22);letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<div class="ambient"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-label">Game Design · Language Learning</p>
+    <h1 class="hero-title">A Detective Adventure<br>for <em>GRE Prep</em></h1>
+    <p class="hero-sub">A visual novel that teaches advanced English vocabulary through a murder mystery set in 1920s Egypt — featuring Detective Poirot, branching investigation paths, and three original minigames.</p>
+    <div class="hero-tags">
+      <span class="tag">Visual Novel</span>
+      <span class="tag">Vocabulary Acquisition</span>
+      <span class="tag">Detective / Mystery</span>
+      <span class="tag">Playable Prototype</span>
+    </div>
+  </div>
+
+  <!-- CONCEPT -->
+  <div class="card">
+    <p class="sec-label">Concept</p>
+    <p class="body-text">This game is designed for advanced English learners preparing for the GRE and TOEFL. Unlike typical vocabulary apps, it teaches <strong>abstract, multi-meaning words</strong> through a rich narrative context — a detective story where every clue, conversation, and deduction reinforces the target vocabulary.</p>
+    <p class="body-text">Players follow Detective Poirot as he investigates a series of mysterious deaths connected to an Egyptian pharaoh's tomb. The twist: Poirot, a Belgian, occasionally stumbles over English — creating natural, humorous moments where vocabulary is introduced, explained, and reinforced through character dialogue.</p>
+    <p class="highlight">"The game incorporates learning into an engaging, meaningful story and makes each part replayable — combining input and output stages while offering the learner agency to explore the game world."</p>
+  </div>
+
+  <!-- STORYLINE -->
+  <div class="card">
+    <p class="sec-label">Storyline</p>
+    <p class="sec-title">The Adventure of the Egyptian Tomb</p>
+    <p class="body-text">The story unfolds across <strong>four chapters</strong>, each deepening the mystery and expanding the player's vocabulary. The tone is mysterious yet humorous, highlighted by continuous banter between Poirot and his assistant Hastings.</p>
+
+    <div style="text-align:center;">
+    <div class="img-standalone">
+      <img src="https://github.com/ruthcgsong/img/raw/main/folio/capstone/GRE4chapter.png" alt="The four chapters of the investigation">
+    </div>
+  </div>
+
+    <div class="grid-2">
+      <div class="grid-cell">
+        <p class="grid-cell-name">Ch 1 · The First Death</p>
+        <p class="grid-cell-desc">Two archaeological teams witness the opening of Pharaoh Men-Her-Ra's tomb. Sir Willard, who dismissed the curse, dies after entering.</p>
+      </div>
+      <div class="grid-cell">
+        <p class="grid-cell-name">Ch 2 · The Second Death</p>
+        <p class="grid-cell-desc">Lady Willard hires Poirot. The excavation sponsor dies of blood poisoning. Hastings investigates in New York — and discovers a body.</p>
+      </div>
+      <div class="grid-cell">
+        <p class="grid-cell-name">Ch 3 · The Trip to Egypt</p>
+        <p class="grid-cell-desc">Poirot and Hastings travel to Egypt. The player chooses who to interrogate — each suspect reveals different pieces of the puzzle.</p>
+      </div>
+      <div class="grid-cell">
+        <p class="grid-cell-name">Ch 4 · Final Battle</p>
+        <p class="grid-cell-desc">The murderer attempts to kill Poirot. The player must assemble all collected clues into a chain of evidence to reach the good ending.</p>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <button class="collapse-btn" onclick="toggle(this)"><span class="arrow">▸</span> Full storyline & branching paths</button>
+      <div class="collapse-body">
+        <div class="collapse-inner">
+          <p class="body-text"><strong>Chapter 3 — Investigation Branches:</strong></p>
+          <p class="body-text">The player can interrogate four suspects in any order, each unlocking different information:</p>
+          <div class="mini-cards">
+            <div class="mini-card">
+              <p class="mini-card-title">Sir Guy Willard</p>
+              <p class="mini-card-text">The young nobleman continuing his father's work — a firm believer in science who despises the notion of supernatural power.</p>
+            </div>
+            <div class="mini-card">
+              <p class="mini-card-title">Dr. Ames</p>
+              <p class="mini-card-text">The team doctor. Claims all deaths were natural causes. Poirot challenges him: the power of superstition can also be powerful.</p>
+            </div>
+            <div class="mini-card">
+              <p class="mini-card-title">Harper, the Secretary</p>
+              <p class="mini-card-text">Knows many things about the Bleibners. A complex relationship — with a story that must be unlocked by the player.</p>
+            </div>
+            <div class="mini-card">
+              <p class="mini-card-title">Hassan, the Servant</p>
+              <p class="mini-card-text">Firmly believes in the curse. Asks Poirot to protect the young Sir — adding tension between science and superstition.</p>
+            </div>
+          </div>
+          <p class="body-text" style="margin-top:16px"><strong>Unlockable secrets:</strong> the Bleibner family relationships, Rupert Bleibner's past and personality, the existence of a will, local tales connected to the tomb.</p>
+          <p class="body-text">After all investigations, Poirot reveals that the deaths mirror ancient tales from a "magic book" — and then a more horrible spectacle takes place...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORD LIST -->
+  <div class="card">
+    <p class="sec-label">Target Structure</p>
+    <p class="sec-title">26-Word Vocabulary Set</p>
+    <p class="body-text">A curated set of GRE-level words, many decomposable by prefix + root — enabling etymology-based learning.</p>
+    <div class="collapsible">
+      <button class="collapse-btn" onclick="toggle(this)"><span class="arrow">▸</span> View full word list</button>
+      <div class="collapse-body">
+        <div class="collapse-inner">
+          <div class="word-grid">
+            <div class="word-chip">anachronistic</div>
+            <div class="word-chip">denote</div>
+            <div class="word-chip">encomium</div>
+            <div class="word-chip">forebode</div>
+            <div class="word-chip">hypersensitive</div>
+            <div class="word-chip">immaterial</div>
+            <div class="word-chip">impeccable</div>
+            <div class="word-chip">omnipresent</div>
+            <div class="word-chip">outrage</div>
+            <div class="word-chip">oversell</div>
+            <div class="word-chip">paradox</div>
+            <div class="word-chip">perspiration</div>
+            <div class="word-chip">presage</div>
+            <div class="word-chip">procure</div>
+            <div class="word-chip">proponent</div>
+            <div class="word-chip">recount</div>
+            <div class="word-chip">convoluted</div>
+            <div class="word-chip">deceased</div>
+            <div class="word-chip">enigma</div>
+            <div class="word-chip">melancholy</div>
+            <div class="word-chip">pillage</div>
+            <div class="word-chip">pugnacious</div>
+            <div class="word-chip">tattered</div>
+            <div class="word-chip">trepidation</div>
+            <div class="word-chip">superstition</div>
+            <div class="word-chip">spout</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARNING DESIGN -->
+  <div class="card">
+    <p class="sec-label">Learning Design</p>
+    <p class="sec-title">How the Game Teaches</p>
+    <p class="body-text">The game targets both <strong>meaning and usage</strong> of advanced vocabulary. Meaning includes spelling, definitions, synonyms/antonyms, and etymology. Usage involves deduction, induction, and analysis — verbal logic skills tested on the GRE.</p>
+
+    <p class="body-text" style="margin-top:20px"><strong>Vocabulary in dialogue — natural input:</strong></p>
+    <div class="mini-card" style="margin-top:10px">
+      <p class="mini-card-text" style="font-style:italic;">
+        Poirot: "I am the best detective in the world!"<br>
+        Hastings: "My friend, you are <strong>overselling</strong> yourself again!"<br>
+        Poirot: "Selling what? I don't get it."<br>
+        Hastings: "It's the combination of 'over' and 'sell', only in a figurative way!"
+      </p>
+    </div>
+
+    <div class="img-frame">
+      <img src="https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREdia1.png" alt="Visual novel dialogue with embedded vocabulary">
+    </div>
+
+    <p class="body-text">Words and glosses are embedded in dialogue with no extra clicks — the flow of conversation stays intact. Three original minigames reinforce the vocabulary through different cognitive channels:</p>
+  </div>
+
+  <!-- MINIGAMES — all 3 in one card -->
+  <div class="card">
+    <p class="sec-label">Minigames</p>
+    <p class="sec-title">Three Ways to Practice</p>
+
+    <div class="mini-card">
+      <p class="mini-card-title">Minigame 1 · Etymology Builder</p>
+      <p class="mini-card-text">Drag-and-drop word roots and prefixes to assemble vocabulary. Confusing pairs (de/di, hyper/hypo, pre/per/pro) are added as distractors. Hover for glosses; quotes from the scene aid recall.</p>
+    </div>
+    <div class="img-frame" style="margin-top:20px;margin-bottom:36px">
+      <img src="https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREmini1.png" alt="Minigame 1 — etymology builder">
+    </div>
+
+    <div class="mini-card">
+      <p class="mini-card-title">Minigame 2 · Timed Card Match</p>
+      <p class="mini-card-text">Flip cards to match words with synonyms or definitions under time pressure. Pictorial glosses on definition cards trigger recall. No win/lose — but faster completion earns more rewards.</p>
+    </div>
+    <div class="img-frame" style="margin-top:20px;margin-bottom:36px">
+      <img src="https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREmini2.png" alt="Minigame 2 — timed card match">
+    </div>
+
+    <div class="mini-card">
+      <p class="mini-card-title">Minigame 3 · Sentence Equivalence</p>
+      <p class="mini-card-text">Fill blanks with synonyms (or antonyms) to make sentences logically correct. Correct answers unlock hidden story secrets — connecting vocabulary practice to narrative reward.</p>
+    </div>
+    <div class="img-frame" style="margin-top:20px">
+      <img src="https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREmini3.png" alt="Minigame 3 — sentence equivalence">
+    </div>
+  </div>
+
+  <!-- SLIDESHOW — Prototype Gallery -->
+  <div class="card">
+    <p class="sec-label">Gallery</p>
+    <p class="sec-title">Prototype Snapshots</p>
+    <p class="body-text">Additional screens from the playable build.</p>
+
+    <div class="slideshow" id="slideshow">
+      <div class="slide-track">
+        <img id="slideImg" src="" alt="">
+      </div>
+      <div class="slide-controls">
+        <button class="slide-btn" onclick="slidePrev()">← Prev</button>
+        <span class="slide-counter" id="slideCounter"></span>
+        <button class="slide-btn" onclick="slideNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN FRAMEWORK -->
+  <div class="card">
+    <p class="sec-label">Design Framework</p>
+    <p class="sec-title">Theoretical Foundations</p>
+    <p class="body-text">The game's learning design is grounded in established SLA and cognitive science frameworks, adapted for a game-based context.</p>
+
+    <div class="grid-2">
+      <div class="grid-cell">
+        <p class="grid-cell-name">Task-Based Learning</p>
+        <p class="grid-cell-desc">Authentic tasks (spotting clues, building evidence) drive vocabulary acquisition through meaningful use.</p>
+      </div>
+      <div class="grid-cell">
+        <p class="grid-cell-name">Contextualized Learning</p>
+        <p class="grid-cell-desc">Glosses embedded in dialogue, visualized in scenes, and tied to emotional/narrative moments.</p>
+      </div>
+      <div class="grid-cell">
+        <p class="grid-cell-name">Dual Coding</p>
+        <p class="grid-cell-desc">Pictorial + textual glosses work together to strengthen encoding without increasing cognitive load.</p>
+      </div>
+      <div class="grid-cell">
+        <p class="grid-cell-name">AGES Model</p>
+        <p class="grid-cell-desc">Attention (timed tasks), Generation (player autonomy), Emotion (surprises), Spacing (plot/minigame alternation).</p>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <button class="collapse-btn" onclick="toggle(this)"><span class="arrow">▸</span> Detailed SLA & AGES breakdown</button>
+      <div class="collapse-body">
+        <div class="collapse-inner">
+          <p class="body-text" style="margin-bottom:12px"><strong>SLA Theory Implementation:</strong></p>
+          <table class="theory-table">
+            <tr><th>Framework</th><th>Approaches Used</th></tr>
+            <tr><td style="color:rgba(220,195,130,.7)">Structural</td><td>Drill & practice; corrective feedback across game modes; translation of both meaning and usage</td></tr>
+            <tr><td style="color:rgba(220,195,130,.7)">Cognitive</td><td>Multiple output modes; working memory tasks under time pressure; gap negotiation; strategy-dependent gameplay; experiential learning</td></tr>
+          </table>
+          <p class="body-text" style="margin-top:24px;margin-bottom:12px"><strong>AGES Model in Detail:</strong></p>
+          <table class="theory-table">
+            <tr><th>Component</th><th>How It's Promoted</th></tr>
+            <tr><td style="color:rgba(220,195,130,.7)">Attention</td><td>Countdown choices, color-tagged text, timed minigames, final deduction under pressure</td></tr>
+            <tr><td style="color:rgba(220,195,130,.7)">Generation</td><td>Player chooses investigation branches and reward strategies; connects known roots to new words</td></tr>
+            <tr><td style="color:rgba(220,195,130,.7)">Emotion</td><td>Surprise reveals, humorous character dialogue, narrative tension and rewards</td></tr>
+            <tr><td style="color:rgba(220,195,130,.7)">Spacing</td><td>Alternation between main plot and minigames; sparse information delivery to avoid cognitive overload</td></tr>
+          </table>
+          <p class="body-text" style="margin-top:20px">The game also applies the <strong>Involvement Load Hypothesis</strong>: the detective story creates intrinsic motivation through curiosity and suspense, while the minigame reward system provides extrinsic motivation for replay. <strong>Input Enhancement</strong> is achieved through color coding, audio effects, and extensive repetition across contexts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN DECISIONS -->
+  <div class="card">
+    <p class="sec-label">Design Decisions</p>
+    <p class="sec-title">Key Considerations</p>
+    <div class="mini-cards">
+      <div class="mini-card">
+        <p class="mini-card-title">Instructions</p>
+        <p class="mini-card-text">Kept deliberately short — bite-sized and discoverable via Help buttons. The game is replayable, so players learn by doing.</p>
+      </div>
+      <div class="mini-card">
+        <p class="mini-card-title">Language Register</p>
+        <p class="mini-card-text">Balanced: some characters (a Belgian detective, a servant) speak simply; others (English nobles, scholars) model advanced usage naturally within the fiction.</p>
+      </div>
+      <div class="mini-card">
+        <p class="mini-card-title">Feedback Design</p>
+        <p class="mini-card-text">Varies by stage — explicit corrective feedback early on, implicit contextual feedback later. Metalinguistic feedback from characters. Difficulty increases gradually.</p>
+      </div>
+      <div class="mini-card">
+        <p class="mini-card-title">Difficulty Staircase</p>
+        <p class="mini-card-text">Vocabulary scope and task complexity increase as the player progresses. Rest points between chapters allow consolidation. The stairs are designed to avoid both boredom and frustration.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <a class="cta-btn" href="#" target="_blank">More Info →</a>
+  </div>
+  <p class="footer">Ruth Song · 2025</p>
+
+</div>
+
+<script>
+/* Collapsible */
+function toggle(btn){
+  var body=btn.nextElementSibling;
+  var isOpen=body.classList.contains('open');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+  if(!isOpen){body.style.maxHeight=body.scrollHeight+'px'}else{body.style.maxHeight='0'}
+}
+
+/* Slideshow — edit this array to add/remove slides */
+var slides=[
+  {src:'https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREprot1.png', alt:'Prototype snapshot 1'},
+  {src:'https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREprot2.png', alt:'Prototype snapshot 2'},
+  {src:'https://github.com/ruthcgsong/img/raw/main/folio/capstone/GREprot3.png', alt:'Prototype snapshot 3'},
+];
+var sIdx=0;
+var slideImg=document.getElementById('slideImg');
+var slideCounter=document.getElementById('slideCounter');
+
+function showSlide(){
+  slideImg.src=slides[sIdx].src;
+  slideImg.alt=slides[sIdx].alt;
+  slideCounter.textContent=(sIdx+1)+' / '+slides.length;
+}
+function slideNext(){sIdx=(sIdx+1)%slides.length;showSlide()}
+function slidePrev(){sIdx=(sIdx-1+slides.length)%slides.length;showSlide()}
+showSlide();
+
+/* Autoplay — advances every 4s, pauses on hover */
+var autoTimer=setInterval(slideNext,4000);
+var ssEl=document.getElementById('slideshow');
+ssEl.addEventListener('mouseenter',function(){clearInterval(autoTimer)});
+ssEl.addEventListener('mouseleave',function(){autoTimer=setInterval(slideNext,4000)});
+ssEl.addEventListener('touchstart',function(){clearInterval(autoTimer)},{passive:true});
+ssEl.addEventListener('touchend',function(){autoTimer=setInterval(slideNext,4000)},{passive:true});
+</script>
+</body>
+</html>
