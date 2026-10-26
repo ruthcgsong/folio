@@ -1,0 +1,300 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>What the Meditation Let In</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the window fills the stage, the shape stands in front of it, SAN and the roll read across the top. */
+:root{
+  --void:#08090B; --panel:#131519; --rule:#24272C; --ink:#DCDFE3; --dim:#80858C;
+  --ivy:#E86FA8; --threat:#C4544A; --rue:#E8B86A; --good:#7CF5C4;
+  --display:'Newsreader',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--void);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:26px 48px}
+.wrap{max-width:880px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
+h1{font-weight:500;font-size:clamp(26px,5.5vw,38px);margin:0 0 8px;letter-spacing:-.01em}
+.lede{color:var(--dim);margin:0 0 18px;max-width:62ch}
+
+.stage{position:relative;aspect-ratio:16/9;border:1px solid var(--rule);overflow:hidden;background:#06070A}
+.bg{position:absolute;inset:0;background:url("window.png") no-repeat center 47%/auto 92%;
+  filter:brightness(.30) saturate(.46) contrast(1.08);
+  animation:breathe 5.6s ease-in-out infinite;transition:filter 1.6s ease}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+.bg.half{filter:brightness(.60) saturate(.72) contrast(1.03)}
+.bg.full{filter:none}
+.pulse{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 46%,transparent 30%,rgba(6,2,2,.80) 86%);mix-blend-mode:multiply}
+/* the shape sits above the vignette so it stays readable against the glass */
+.sh{position:absolute;opacity:0;pointer-events:none;
+  transition:opacity 1.3s ease, transform 1.3s ease;filter:blur(5px)}
+.sh.float{animation:float 6.5s ease-in-out infinite}
+@keyframes float{0%,100%{margin-top:0}50%{margin-top:-14px}}
+.flash{position:absolute;inset:0;pointer-events:none;background:#B32A20;opacity:0;mix-blend-mode:screen;
+  transition:opacity .45s ease}
+
+.slab{position:absolute;left:0;right:0;bottom:0;padding:44px 20px 18px;
+  background:linear-gradient(transparent,rgba(4,5,8,.93) 44%)}
+.who{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.who.r{color:var(--rue)} .who.i{color:var(--ivy)} .who.t{color:var(--threat)} .who.g{color:var(--good)}
+.say{margin:0;font-size:clamp(15px,2.4vw,20px);max-width:56ch;min-height:3.6em;font-variant-ligatures:none}
+.say em{font-style:italic;color:var(--dim)}
+.say .glyph{color:var(--threat);text-shadow:0 0 10px rgba(196,84,74,.5)}
+.say.shake{animation:shk .42s ease-out}
+@keyframes shk{
+  0%{transform:translate(0,0)}15%{transform:translate(-3px,1px)}30%{transform:translate(3px,-1px)}
+  45%{transform:translate(-2px,-1px)}60%{transform:translate(2px,1px)}80%{transform:translate(-1px,0)}
+  100%{transform:translate(0,0)}}
+
+.top{position:absolute;top:0;left:0;right:0;padding:10px 14px;display:flex;gap:12px;align-items:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);
+  text-shadow:0 1px 6px #000;pointer-events:none}
+.top b{color:var(--ink);font-variant-numeric:tabular-nums}
+.track{flex:0 1 120px;height:3px;background:rgba(255,255,255,.18);min-width:54px}
+.track i{display:block;height:100%;background:var(--ivy);transition:width .5s ease}
+.track i.low{background:var(--threat)}
+.hitnum{color:var(--threat);opacity:0;transition:opacity .3s;font-weight:500}
+.hitnum.show{opacity:1}
+.roll{margin-left:auto;text-align:right}
+.roll .lv{letter-spacing:.14em}
+.roll .lv.good{color:var(--good)} .roll .lv.bad{color:var(--threat)}
+
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+@media (max-width:620px){.acts{grid-template-columns:repeat(2,1fr)}}
+button{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;
+  background:transparent;color:var(--ink);border:1px solid var(--rule);padding:11px 10px;min-width:0}
+button:hover:not(:disabled){border-color:var(--ink)}
+button.deny{animation:deny .32s}
+@keyframes deny{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+button.live{border-color:var(--ivy);color:var(--ivy);animation:arrive .5s ease-out}
+@keyframes arrive{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+button.live:hover{background:var(--ivy);color:var(--void)}
+button:disabled{opacity:.26;cursor:default}
+button:focus-visible{outline:2px solid var(--ivy);outline-offset:2px}
+.bar{display:flex;gap:8px;align-items:center;margin-top:10px}
+.bar .ghost{border-color:var(--rule);color:var(--dim)}
+.meta{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-left:auto}
+.note{margin-top:24px;border-top:1px solid var(--rule);padding-top:14px;font-size:15px;color:var(--dim);max-width:72ch}
+.note b{color:var(--ink);font-weight:500}
+@media (prefers-reduced-motion:reduce){.bg,.lit{animation:none}.deny{animation:none}}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">College of Mysteries · Act I · Rue’s room, 02:40</p>
+  <h1>What the Meditation Let In</h1>
+  <p class="lede">She meditated with the stone under her tongue and went too far down. Four things she could try. Three of them are not going to work.</p>
+
+  <div class="stage" id="stage">
+    <div class="bg" id="bgEl"></div>
+    <div class="pulse" id="pulse"></div>
+    <svg class="sh" id="mike" style="left:21%;top:6%;width:22%" viewBox="0 0 200 460" aria-hidden="true">
+      <ellipse cx="100" cy="230" rx="92" ry="222" fill="#050607" opacity=".93"/>
+      <circle cx="78" cy="118" r="5.5" fill="#D8564A" opacity=".8"/>
+      <circle cx="122" cy="118" r="5.5" fill="#D8564A" opacity=".8"/>
+    </svg>
+    <div class="flash" id="flash"></div>
+    <div class="top">
+      <span>SAN</span><span class="track"><i id="sanbar" style="width:100%"></i></span>
+      <b id="sann">100</b><span class="hitnum" id="hitnum"></span>
+      <span class="roll" id="roll"></span>
+    </div>
+    <div class="slab">
+      <div class="who r" id="who">Rue</div>
+      <p class="say" id="say">Focus… breathe… in… out… <em>Something is standing between the bed and the window.</em></p>
+    </div>
+  </div>
+
+  <div class="acts" id="acts">
+    <button data-a="hand">Move your hand</button>
+    <button data-a="head">Turn your head</button>
+    <button data-a="call">Call out</button>
+    <button data-a="mind">Mind-reading</button>
+  </div>
+  <div class="bar">
+    <button class="ghost" id="reset">Reset</button>
+    <span class="meta" id="meta">Mind-reading 50 · hard 25</span>
+  </div>
+
+  <p class="note"><b>What the roll decides.</b> Mind-reading is the only action that resolves the scene, and it can be retried as often as the player likes — each attempt costs SAN on a failure, so the question is how much of herself she is willing to spend finding out what she is looking at. A regular success tells her what the shape is. A Hard success gives some SAN back, lights the window, and shows her one thing in the room that is not hers.</p>
+</div>
+
+<script>
+const GLYPHS="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ◺◹◸⟊⟁⌬⍉⌇≋∷⊹";
+const $=id=>document.getElementById(id);
+const say=$('say'), who=$('who'), flash=$('flash'), bgEl=$('bgEl'),
+      sanBar=$('sanbar'), sanN=$('sann'), hitNum=$('hitnum'), rollEl=$('roll'), acts=$('acts'),
+      mike=$('mike'), pulse=$('pulse');
+
+const SKILL=50, MAXSAN=100;        // exactly even odds, tuned for the demo
+let san=MAXSAN, dread=0, woken=false, phase='locked', AC=null, corrupt=null;
+
+const d=n=>1+((Math.random()*n)|0);
+
+function thump(hard){
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(hard?112:94,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(34,AC.currentTime+0.17);
+    g.gain.setValueAtTime(0.0001,AC.currentTime);
+    g.gain.linearRampToValueAtTime(hard?0.30:0.2,AC.currentTime+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+0.36);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+0.4);
+  }catch(e){}
+}
+function setSan(v){
+  san=Math.max(0,Math.min(MAXSAN,Math.round(v)));
+  sanBar.style.width=(san/MAXSAN*100)+'%';
+  sanBar.classList.toggle('low',san<55);
+  sanN.textContent=san;
+}
+function hit(n,hard){
+  setSan(san-n);
+  hitNum.textContent=(n>0?'−':'+')+Math.abs(n);
+  hitNum.style.color=n>0?'var(--threat)':'var(--good)';
+  hitNum.classList.add('show'); setTimeout(()=>hitNum.classList.remove('show'),1500);
+  if(n>0){
+    thump(hard);
+    flash.style.opacity=hard?'0.5':'0.3';
+    setTimeout(()=>flash.style.opacity='0',hard?260:200);
+  }
+}
+function setDread(v){
+  dread=Math.max(0,v);
+  const k=Math.min(1,dread/4);
+  mike.style.opacity=woken?(0.88+0.12*k).toFixed(2):'0';
+  mike.style.transform=`scale(${0.94+0.22*k})`;
+  mike.classList.toggle('float',woken);
+}
+function clearShades(){ woken=false; mike.classList.remove('float'); mike.style.opacity='0'; mike.style.transform='scale(.9)'; }
+
+function stopCorrupt(){ if(corrupt){clearInterval(corrupt); corrupt=null;} }
+function setLine(w,html,distort){
+  stopCorrupt();
+  who.textContent=w||''; who.className='who'+(w==='Rue'?' r':w==='Ivy'?' i':w==='—'?' g':(w?' t':''));
+  if(!distort){ say.innerHTML=html; return; }
+  const plain=html.replace(/<[^>]+>/g,'');
+  let p=distort;
+  corrupt=setInterval(()=>{
+    let out='';
+    for(const ch of plain){
+      if(ch===' '){out+=' ';continue;}
+      out += Math.random()<p ? `<span class="glyph">${GLYPHS[(Math.random()*GLYPHS.length)|0]}</span>` : ch;
+    }
+    say.innerHTML=out;
+    p-=distort/30;
+    if(p<=0.02){ stopCorrupt(); say.innerHTML=html; }
+  },70);
+}
+function sequence(beats,done){
+  let i=0;
+  const run=()=>{ if(i>=beats.length){ done&&done(); return; }
+    const b=beats[i]; setLine(b[0],b[1],b[2]); i++; setTimeout(run, b[2]?2800:2200); };
+  run();
+}
+function wake(){ if(woken) return; woken=true; setDread(1.4); }   /* only "Call out" summons it */
+
+function openDoor(){
+  if(phase==='door'||document.getElementById('door')) return;
+  phase='door';
+  acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=true);
+  setTimeout(()=>{
+    const b=document.createElement('button');
+    b.className='live'; b.id='door'; b.textContent='Someone is at the door';
+    acts.appendChild(b);
+    b.onclick=()=>{ b.remove(); rescue(); };
+  },1200);
+}
+
+const DENY={
+ hand:['Rue','My fingers are right there. I can feel the sheet under them. The order goes out and nothing takes it.'],
+ head:['Rue','I can’t look up. My eyes will move. The rest of me won’t come with them.'],
+ call:['Rue','Air goes in and nothing comes out. Will — no, he’s not in the dorms. Marc, then. I can’t reach my phone, I can’t move…']
+};
+const TAUNT=[
+ ['Old Mike','“Remember us, Rue? Remember how you reveled in our fear?”'],
+ ['The rat','“Remember me. Your little experiment. And I was your little subject.”'],
+ ['The rat','“A child? Or a monster in the making?”'],
+ ['Old Mike','“You keep the door shut on us and then you come down here and knock.”']
+];
+
+function deny(btn,a){
+  if(a==='call') wake();
+  btn.classList.add('deny'); setTimeout(()=>btn.classList.remove('deny'),340);
+  const loss=d(6); hit(loss,false); if(woken) setDread(dread+0.6);
+  say.classList.remove('shake'); void say.offsetWidth; say.classList.add('shake');
+  const beats=[[DENY[a][0],DENY[a][1]]];
+  if(a==='call') beats.push(TAUNT[0]);
+  sequence(beats);
+}
+
+function mindRead(){
+  wake();
+  const u=(Math.random()*10)|0, tn=(Math.random()*10)|0;
+  let v=tn*10+u; if(v===0) v=100;
+  const lvl = v<=Math.floor(SKILL/5)?'extreme' : v<=Math.floor(SKILL/2)?'hard'
+            : v<=SKILL?'regular' : 'failure';
+  const good=lvl!=='failure';
+  rollEl.innerHTML=`d100 <b>${v}</b> vs 45 <span class="lv ${good?'good':'bad'}">${lvl}</span>`;
+  acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=true);
+  const unlock=()=>acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=false);
+
+  if(lvl==='failure'){
+    hit(d(10),true); if(woken) setDread(dread+1.2);
+    sequence([
+      ['Rue','Mind-reading failed. I can’t reach it, I still can’t move, and it hasn’t gone anywhere.',0.9]
+    ], unlock);
+  } else if(lvl==='regular'){
+    clearShades(); setDread(0);
+    sequence([
+      ['Rue','There’s nothing in him to read. He’s made of me — and that girl would have enjoyed this. I’m the one he scares, so I’m not her any more.'],
+      ['Rue','Someone’s knocking on my door.']
+    ], openDoor);
+  } else {
+    hit(-d(10),false); clearShades(); setDread(0); bgEl.classList.add('half');
+    sequence([
+      ['Rue','Nothing in him to read — he’s made of me, and that girl would have enjoyed this. I can’t stop shaking, so she isn’t who I am.'],
+      ['Rue','And underneath him, something that isn’t mine at all. Patient. Coming from somewhere past the window.'],
+      ['Rue','Someone’s knocking on my door.']
+    ], openDoor);
+  }
+}
+
+function rescue(){
+  phase='free'; clearShades();
+  bgEl.classList.remove('half'); bgEl.classList.add('full');
+  const beats=[
+    ['Ivy','“Rue? I heard noises.” <em>The door gives on the second shoulder.</em>'],
+    ['Ivy','“Deep breaths. Can you move your fingers for me?”'],
+    ['Rue','Ivy — Old Mike. The mouse. They were here.'],
+    ['Ivy','“You just had a sleep paralysis. Your mind woke up and your body didn’t.”'],
+    ['Rue','What if that girl in the dreams is who I actually am?'],
+    ['Ivy','“…Move over.” <em>She sits on the edge of the bed, takes the pebble, and turns it over twice in the dark. She doesn’t leave.</em>']
+  ];
+  let i=0;
+  const b=document.createElement('button'); b.className='live'; b.textContent='Continue →'; acts.appendChild(b);
+  const step=()=>{ if(i>=beats.length){ b.remove(); return; } setLine(beats[i][0],beats[i][1]); i++; };
+  b.onclick=step; step();
+}
+
+acts.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-a]');
+  if(!btn||btn.disabled||phase!=='locked') return;
+  if(btn.dataset.a==='mind') mindRead(); else deny(btn,btn.dataset.a);
+});
+$('reset').onclick=()=>{
+  stopCorrupt(); phase='locked'; woken=false; setSan(MAXSAN); setDread(0);
+  bgEl.classList.remove('half','full'); rollEl.innerHTML=''; hitNum.classList.remove('show');
+  acts.innerHTML='<button data-a="hand">Move your hand</button><button data-a="head">Turn your head</button>'+
+    '<button data-a="call">Call out</button><button data-a="mind">Mind-reading</button>';
+  setLine('Rue','Focus… breathe… in… out… <em>Something is standing between the bed and the window.</em>');
+};
+setSan(MAXSAN); setDread(0);
+</script>
+
+</body></html>
