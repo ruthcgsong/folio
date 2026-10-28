@@ -1,0 +1,342 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Four Lenses</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=Noto+Sans+SC:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dark lab, four overlays over it, a lens rail beneath. Single dark look by choice. */
+:root{
+  --void:#0A0C0B; --room:#141816; --panel:#1B201D; --rule:#2C332E;
+  --ink:#DFE2D8; --dim:#8A9289;
+  --marc:#7CF5C4;   /* green-blue  */
+  --rue:#9CC8F5;    /* light blue  */
+  --will:#C9A271;   /* wood brown  */
+  --ivy:#E86FA8;    /* magenta — the infection, not her colour */
+  --display:'Newsreader',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --cjk:'Noto Sans SC','PingFang SC',sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--void);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:26px 48px}
+body[data-lang="zh"] .readout,body[data-lang="zh"] .lede{font-family:var(--cjk)}
+body[data-lang="zh"] h1{font-family:var(--cjk);letter-spacing:.08em}
+.wrap{max-width:960px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
+h1{font-family:'Cinzel',Georgia,serif;font-weight:500;font-size:clamp(24px,4vw,38px);margin:0 0 8px;letter-spacing:.02em}
+.lede{color:var(--dim);margin:0 0 18px;max-width:62ch}
+
+.stage{position:relative;width:100%;aspect-ratio:1586/992;background:var(--room);border:1px solid var(--rule);
+  border-radius:3px;overflow:hidden;cursor:none;touch-action:none}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.base{position:absolute;inset:0;background:url("lab.jpg") center/cover no-repeat}
+.layer{position:absolute;inset:0;opacity:0;transition:opacity .25s ease}
+.layer.on{opacity:1}
+.stage.torch .layer{
+  -webkit-mask-image:radial-gradient(circle var(--r,150px) at var(--x,50%) var(--y,50%),#000 0 58%,rgba(0,0,0,.35) 80%,transparent 100%);
+  mask-image:radial-gradient(circle var(--r,150px) at var(--x,50%) var(--y,50%),#000 0 58%,rgba(0,0,0,.35) 80%,transparent 100%)}
+.halo{position:absolute;width:var(--d,300px);height:var(--d,300px);border-radius:50%;pointer-events:none;
+  left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);opacity:0;transition:opacity .2s;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+.stage.torch .halo{opacity:1}
+.stage:not(.torch){cursor:default}
+.hintbar{position:absolute;left:0;right:0;bottom:0;padding:8px 14px;
+  background:linear-gradient(transparent,rgba(0,0,0,.75) 40%);
+  font-family:var(--mono);font-size:11px;letter-spacing:.07em;color:var(--dim);text-transform:uppercase;pointer-events:none}
+body[data-lang="zh"] .hintbar{font-family:var(--cjk);text-transform:none;letter-spacing:.04em;font-size:12px}
+@keyframes drift{0%,100%{transform:translate(0,0)}33%{transform:translate(5px,-7px)}66%{transform:translate(-4px,4px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-6px,-5px)}}
+.puff{animation:drift 7s ease-in-out infinite}
+.puff2{animation:drift2 9s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.puff,.puff2{animation:none}}
+
+.rail{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+@media (max-width:620px){.rail{grid-template-columns:repeat(2,1fr)}}
+.lens{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:9px 10px;text-align:left;cursor:pointer;
+  font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);min-width:0}
+.lens b{display:block;font-weight:500;font-size:12px;letter-spacing:.1em;margin-bottom:2px;color:var(--ink)}
+body[data-lang="zh"] .lens{font-family:var(--cjk);text-transform:none;letter-spacing:.03em;font-size:12px}
+.lens:hover{border-color:var(--dim)}
+.lens[aria-pressed="true"]{color:var(--ink)}
+.lens[data-k="marc"][aria-pressed="true"]{border-color:var(--marc);box-shadow:0 0 18px -6px var(--marc)}
+.lens[data-k="will"][aria-pressed="true"]{border-color:var(--will);box-shadow:0 0 18px -6px var(--will)}
+.lens[data-k="ivy"][aria-pressed="true"]{border-color:var(--ivy);box-shadow:0 0 18px -6px var(--ivy)}
+.lens[data-k="rue"][aria-pressed="true"]{border-color:var(--rue);box-shadow:0 0 18px -6px var(--rue)}
+.lens[data-k="none"][aria-pressed="true"]{border-color:var(--dim)}
+.lens:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.readout{margin-top:14px;border-left:2px solid var(--rule);padding:2px 0 2px 14px;min-height:92px}
+.readout .who{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+body[data-lang="zh"] .readout .who{font-family:var(--cjk);text-transform:none;letter-spacing:.05em;font-size:13px}
+.readout p{margin:0 0 8px}
+.readout p:last-child{margin-bottom:0}
+.readout .mech{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.03em}
+body[data-lang="zh"] .readout .mech{font-family:var(--cjk);font-size:13px;letter-spacing:0}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.controls label{display:flex;align-items:center;gap:7px}
+input[type=range]{accent-color:var(--ink);width:120px}
+input[type=checkbox]{accent-color:var(--ink)}
+button#lang{font-family:var(--mono);font-size:11px;letter-spacing:.1em;cursor:pointer;background:transparent;
+  color:var(--ink);border:1px solid var(--rule);border-radius:2px;padding:7px 11px;margin-left:auto}
+button#lang:hover{border-color:var(--ink)}
+.note{margin-top:24px;border-top:1px solid var(--rule);padding-top:14px;font-size:15px;color:var(--dim);max-width:70ch}
+.note b{color:var(--ink);font-weight:500}
+</style>
+
+<div class="wrap">
+  <h1 id="h1">Four Lenses</h1>
+  <p class="lede" id="lede">One lab, drawn once. Each lens is a different member of the club looking at it. Move the light across the room — on a phone, drag.</p>
+
+  <div class="stage torch" id="stage" data-lens="none">
+
+    <!-- BASE — the lab as anyone sees it -->
+    <div class="base" role="img" aria-label="A dim basement laboratory: door, bare wall, bench with instruments, sink"></div>
+
+    <!-- MARC — the geometry, in light cyan -->
+    <div class="layer" id="L-marc"><svg viewBox="0 0 1000 620">
+      <defs><filter id="gMarc" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <g filter="url(#gMarc)" stroke="#7CF5C4" fill="none" stroke-width="1.6" opacity=".95">
+        <path d="M262 236l30-18 30 18v36l-30 18-30-18z"/>
+        <path d="M322 218l30-18 30 18v36l-30 18-30-18z"/>
+        <path d="M292 272l30-18 30 18v36l-30 18-30-18z" opacity=".82"/>
+        <path d="M382 236l30-18 30 18v36l-30 18-30-18z" opacity=".62"/>
+        <path d="M352 290l30-18 30 18v36l-30 18-30-18z" opacity=".44"/>
+        <path d="M442 254l30-18 30 18v36l-30 18-30-18z" opacity=".3"/>
+        <circle cx="292" cy="254" r="3" fill="#7CF5C4" stroke="none"/>
+      </g>
+      <g filter="url(#gMarc)" stroke="#7CF5C4" fill="none" stroke-width="2.2">
+        <path d="M646 30h96l-34 22 34 20h150" opacity=".9"/>
+        <path d="M742 52h-34" stroke-dasharray="4 5"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="15" fill="#7CF5C4">
+        <text x="262" y="402" data-t="marc-0"></text>
+        <text x="262" y="426" data-t="marc-1"></text>
+        <text x="262" y="450" data-t="marc-2"></text>
+        <text x="648" y="104" data-t="marc-3"></text>
+        <text x="648" y="128" data-t="marc-4"></text>
+        <text x="648" y="152" data-t="marc-5"></text>
+      </g>
+    </svg></div>
+
+    <!-- WILL — cuts in the plaster, in wood brown -->
+    <div class="layer" id="L-will"><svg viewBox="0 0 1000 620">
+      <defs><filter id="gWill" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <g filter="url(#gWill)" stroke="#C9A271" fill="none" stroke-width="2.4" opacity=".95">
+        <path d="M268 206l14 26-14 26M298 206v52M294 232h22M334 206l16 16-16 16z"/>
+        <path d="M372 206h24l-12 34zM420 206v52M410 232h20M452 218a12 12 0 1 0 .1 0"/>
+        <path d="M268 296h26M278 284v26M320 284l18 26-18 0M364 284v26l22-26M408 284h24l-12 26z"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="15" fill="#E0C49B">
+        <text x="268" y="364" data-t="will-0"></text>
+        <text x="268" y="388" data-t="will-1"></text>
+        <text x="268" y="414" font-size="13" fill="#C9A271" opacity=".85" data-t="will-2"></text>
+        <text x="268" y="458" data-t="will-3"></text>
+        <text x="268" y="482" data-t="will-4"></text>
+        <text x="268" y="508" font-size="13" fill="#C9A271" opacity=".85" data-t="will-5"></text>
+      </g>
+    </svg></div>
+
+    <!-- IVY — the plate under fluorescence, in magenta -->
+    <div class="layer" id="L-ivy"><svg viewBox="0 0 1000 620">
+      <defs><filter id="gIvy" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <circle cx="706" cy="306" r="40" fill="none" stroke="#E86FA8" stroke-width="1.5" opacity=".85"/>
+      <g filter="url(#gIvy)" fill="#E86FA8">
+        <circle cx="692" cy="296" r="4.4"/><circle cx="710" cy="290" r="3"/>
+        <circle cx="724" cy="302" r="3.8"/><circle cx="698" cy="314" r="2.6"/>
+        <circle cx="716" cy="320" r="3.4"/><circle cx="682" cy="312" r="2.2"/>
+      </g>
+      <path d="M692 296l18-6 14 12-8 18-24 8-8-16z" fill="none" stroke="#E86FA8" stroke-width="1" opacity=".7"/>
+      <g filter="url(#gIvy)" fill="#E86FA8" opacity=".9">
+        <circle cx="576" cy="368" r="3.4"/><circle cx="562" cy="398" r="2.6"/>
+        <circle cx="550" cy="426" r="2"/><circle cx="588" cy="344" r="2.4"/>
+      </g>
+      <path d="M592 336L546 436" fill="none" stroke="#E86FA8" stroke-width="1.3" opacity=".6"/>
+      <g fill="none" stroke="#E86FA8" stroke-width="1" opacity=".45">
+        <path d="M706 262v-34h-180"/><path d="M544 448h-56"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="15" fill="#F2A3C8">
+        <text x="514" y="196" text-anchor="end" data-t="ivy-0"></text>
+        <text x="514" y="220" text-anchor="end" data-t="ivy-1"></text>
+        <text x="514" y="244" text-anchor="end" data-t="ivy-2"></text>
+        <text x="480" y="452" text-anchor="end" data-t="ivy-3"></text>
+        <text x="480" y="476" text-anchor="end" data-t="ivy-4"></text>
+      </g>
+    </svg></div>
+
+    <!-- RUE — what the room is still holding, in light blue -->
+    <div class="layer" id="L-rue"><svg viewBox="0 0 1000 620">
+      <defs><filter id="gRue" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="14"/></filter>
+        <filter id="gRueT" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <g class="puff" filter="url(#gRue)" fill="#9CC8F5" opacity=".34">
+        <ellipse cx="686" cy="238" rx="58" ry="86"/>
+        <ellipse cx="686" cy="144" rx="36" ry="38"/>
+        <ellipse cx="714" cy="286" rx="38" ry="40" opacity=".7"/>
+        <ellipse cx="674" cy="84" rx="24" ry="18" opacity=".5"/>
+        <ellipse cx="698" cy="44" rx="16" ry="11" opacity=".3"/>
+      </g>
+      <g class="puff2" filter="url(#gRue)" fill="#9CC8F5" opacity=".28">
+        <ellipse cx="104" cy="320" rx="52" ry="96"/>
+        <ellipse cx="104" cy="216" rx="33" ry="35"/>
+        <ellipse cx="92" cy="150" rx="21" ry="17" opacity=".5"/>
+        <ellipse cx="114" cy="104" rx="13" ry="10" opacity=".3"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="15" fill="#C4DEFA" filter="url(#gRueT)">
+        <text x="500" y="152" text-anchor="end" data-t="rue-0"></text>
+        <text x="500" y="176" text-anchor="end" data-t="rue-1"></text>
+        <text x="500" y="200" text-anchor="end" data-t="rue-2"></text>
+        <text x="236" y="520" data-t="rue-3"></text>
+        <text x="236" y="544" data-t="rue-4"></text>
+      </g>
+    </svg></div>
+
+    <div class="halo" id="halo"></div>
+    <div class="hintbar" id="hint">No lens — the lab as the player sees it</div>
+  </div>
+
+  <div class="rail">
+    <button class="lens" data-k="none" aria-pressed="true"><b id="plainLbl">Plain</b><span class="sub">1 · no gift</span></button>
+    <button class="lens" data-k="marc" aria-pressed="false"><b>Marc</b><span class="sub">2 · artistic insight</span></button>
+    <button class="lens" data-k="will" aria-pressed="false"><b>Will</b><span class="sub">3 · erudite</span></button>
+    <button class="lens" data-k="ivy" aria-pressed="false"><b>Ivy</b><span class="sub">4 · clinical read</span></button>
+    <button class="lens" data-k="rue" aria-pressed="false"><b>Rue</b><span class="sub">5 · emotional resonance</span></button>
+  </div>
+
+  <div class="readout" id="readout"></div>
+
+  <div class="controls">
+    <label><span id="lLight">Light</span> <input type="range" id="rad" min="80" max="560" value="150"></label>
+    <label><input type="checkbox" id="full"> <span id="lFlood">Flood the room</span></label>
+    <span id="lKeys">keys 1–5</span>
+    <button id="lang">中文</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   EN-SCRIPT — English lines, one block per lens.
+   ══════════════════════════════════════════════════════════════ */
+const EN={
+  ui:{hintNone:'No lens — the lab as the player sees it', light:'Light', flood:'Flood the room', keys:'keys 1–5',
+      title:'Four Lenses', plain:'Plain',
+      lede:'A seemingly unremarkable lab. Through the eyes of the four, it is anything but. Put on their lenses and look again.',
+      rail:['1 · no gift','2 · extraordinary vision','3 · erudite','4 · trained eye','5 · emotional resonance']},
+  art:{
+    marc:['the marks on the wall —','they are honeycombs.','regular. repeating.',
+          'something wet has moved','along this pipe — and it','takes a turn, halfway.'],
+    will:['the gate groans beneath','the weight of what waits beyond.','— some heavy truth is waiting to be found.',
+          'on the star chart, several','principal stars have yet to ignite.','— the ritual is not complete yet.'],
+    ivy :['under the luminescence microscope','the culture glows, strangely —',
+          'and I have never seen an organism like it.','spatters, not drips. a plate was smashed.',''],
+    rue :['there was an argument in here —','agitated, and wanting.','',
+          'someone fled through this door','in a panic.']
+  },
+  none:{who:'The Lab',  body:['A bench, a sink, a microscope somebody left switched on. Nothing special.']},
+  marc:{who:'Marc · Extraordinary Vision', body:['Some colours can only be seen by someone built to see them.']},
+  will:{who:'Will · Erudite',   body:['He reads between the lines, and decodes what was meant to stay obscure.']},
+  ivy :{who:'Ivy · Trained Eye', body:['To survive in a lab you need a great deal of medical knowledge — or knowledge from somewhere further out.']},
+  rue :{who:'Rue · Emotional Resonance', body:['Atmosphere is not an abstract noun. To the right person it can be seen, smelled and touched.']}
+};
+
+/* ══════════════════════════════════════════════════════════════
+   CN-SCRIPT — 中文台词。只需修改这一块；人物名保持英文不译。
+   ══════════════════════════════════════════════════════════════ */
+const CN={
+  ui:{hintNone:'未使用天赋 — 玩家眼中的实验室', light:'光圈', flood:'照亮整个房间', keys:'按 1–5 切换',
+      title:'四象视角', plain:'普通',
+      lede:'一间看似平平无奇的实验室。但在四人眼里，可就没那么简单了。戴上他们的“眼睛”一探究竟！',
+      rail:['1 · 普通状态','2 · 超级视觉','3 · 博学之士','4 · 训练有素','5 · 情感共鸣']},
+  art:{
+    marc:['墙上的痕迹……','是规整的蜂巢形……','',
+          '像有湿润的痕迹','在沿着管道走，','但在中途拐了个弯？？'],
+    will:['这扇门在叫嚣着，','有东西正呼之欲出。','——某种沉重的真相有待被发现。',
+          '星图上，还有几颗主星','尚未亮起。','——一个重要仪式中，必要的环节尚未完成。'],
+    ivy :['培养皿里的东西','在荧光显微镜下发着奇特的光，','这东西我之前从来没见过……',
+          '溅射痕，不是滴落痕。有人砸了这个培养皿。',''],
+    rue :['我闻到了辩论的火药味儿……','有人似乎很激动，','又在渴望着什么。',
+          '有人从这扇门跑了，','他好像很慌。']
+  },
+  none:{who:'一间实验室', body:['一个水槽，一个实验台，上面有一台显微镜。平平无奇。']},
+  marc:{who:'MARC · 超级视觉', body:['对于有超级视觉的人来说，世上可不止七种颜色。']},
+  will:{who:'WILL · 博学之士', body:['有些佶屈聱牙的文字，背后的意义令人深思。']},
+  ivy :{who:'IVY · 训练有素', body:['要在实验室里混，你必须得有丰富的医学常识……或者其他偏门知识。']},
+  rue :{who:'RUE · 情感共鸣', body:['气场，并非一个抽象名词，对有些人来说，它是可以看到，摸到，闻到的。']}
+};
+
+/* Nothing below needs editing for a translation. */
+const VAR={none:'--dim',marc:'--marc',will:'--will',ivy:'--ivy',rue:'--rue'};
+let lang='en', curLens='none';
+const T=()=>lang==='zh'?CN:EN;
+
+const stage=document.getElementById('stage'), halo=document.getElementById('halo'),
+      hint=document.getElementById('hint'), readout=document.getElementById('readout'),
+      rad=document.getElementById('rad'), full=document.getElementById('full');
+
+function paintArt(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const p=el.dataset.t.split('-');
+    el.textContent=(T().art[p[0]]||[])[+p[1]]||'';
+  });
+}
+function setLens(k){
+  curLens=k;
+  stage.dataset.lens=k;
+  document.querySelectorAll('.layer').forEach(l=>l.classList.remove('on'));
+  if(k!=='none') document.getElementById('L-'+k).classList.add('on');
+  document.querySelectorAll('.lens').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===k)));
+  const c=T()[k], v=VAR[k];
+  hint.textContent = k==='none' ? T().ui.hintNone : c.who;
+  readout.innerHTML=`<div class="who" style="color:var(${v})">${c.who}</div>`+
+    c.body.map(p=>`<p>${p}</p>`).join('');
+  readout.style.borderLeftColor=`var(${v})`;
+}
+function move(e){
+  const r=stage.getBoundingClientRect();
+  const x=((e.clientX-r.left)/r.width*100), y=((e.clientY-r.top)/r.height*100);
+  stage.style.setProperty('--x',x+'%'); stage.style.setProperty('--y',y+'%');
+  halo.style.setProperty('--x',x+'%'); halo.style.setProperty('--y',y+'%');
+}
+stage.addEventListener('pointermove',move);
+stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);move(e);});
+function setRadius(){
+  const v=full.checked?2000:+rad.value;
+  stage.style.setProperty('--r',v+'px');
+  halo.style.setProperty('--d',(v*2)+'px');
+  stage.classList.toggle('torch',!full.checked);
+}
+rad.addEventListener('input',setRadius); full.addEventListener('change',setRadius);
+document.addEventListener('keydown',e=>{
+  const m={'1':'none','2':'marc','3':'will','4':'ivy','5':'rue'}[e.key];
+  if(m){setLens(m);e.preventDefault();}
+});
+document.querySelectorAll('.lens').forEach(b=>b.onclick=()=>setLens(b.dataset.k));
+
+document.getElementById('lang').onclick=e=>{
+  lang = lang==='zh' ? 'en' : 'zh';
+  e.target.textContent = lang==='zh' ? 'EN' : '中文';
+  document.body.dataset.lang=lang;
+  document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
+  const u=T().ui;
+  document.getElementById('lede').textContent=u.lede;
+  document.getElementById('h1').textContent=u.title;
+  document.getElementById('plainLbl').textContent=u.plain;
+  document.getElementById('lLight').textContent=u.light;
+  document.getElementById('lFlood').textContent=u.flood;
+  document.getElementById('lKeys').textContent=u.keys;
+  document.querySelectorAll('.lens .sub').forEach((s,i)=>s.textContent=u.rail[i]);
+  paintArt(); setLens(curLens);
+};
+
+document.getElementById('lede').textContent=EN.ui.lede;
+document.querySelectorAll('.lens .sub').forEach((el,i)=>el.textContent=EN.ui.rail[i]);
+paintArt(); setRadius(); setLens('none');
+</script>
+
+</body></html>
