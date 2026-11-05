@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decipher the Wheel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#e9e0cd; --paper2:#d8ccb2; --ink:#2b2520; --dim:#6f6454; --line:#b8a88a;
+    --red:#8d2f2a; --gold:#a8873f; --glow:#8ff0c8;
+    --disp:'Cinzel',serif; --serif:'Newsreader',Georgia,serif; --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;font-family:var(--serif);font-size:16.5px;line-height:1.6;color:var(--ink);
+    background:#cfc3a8;background-image:radial-gradient(ellipse at 50% 10%,#efe7d6,#c3b596 85%);
+    min-height:100vh;transition:background 1.1s, color 1.1s}
+  .note,.slot{color:var(--ink)}
+  .verdict.no{color:#cf7a6c}
+  body.dark{background:#05070a;background-image:radial-gradient(ellipse at 50% 35%,#0b1218,#020406 80%);color:#2d3a3a}
+  body.boot{background:#05070a;background-image:radial-gradient(ellipse at 50% 35%,#0b1218,#020406 80%)}
+  .wrap{transition:opacity 1.2s ease-out}
+  body.boot .wrap{opacity:0}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:26px 16px 70px;display:grid;grid-template-columns:1fr 330px;gap:30px;align-items:start}
+  @media(max-width:880px){ .wrap{grid-template-columns:1fr} }
+
+  header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line);padding-bottom:14px;transition:border-color 1.1s}
+  header>div:first-child{flex:1 1 340px}
+  body.dark header{border-color:#101a1f}
+  h1{font-family:var(--disp);font-weight:600;letter-spacing:.12em;font-size:22px;margin:0 0 7px}
+  .sub{font-size:16px;font-style:italic;color:var(--dim);max-width:44em;line-height:1.5;transition:color 1.1s}
+  body.dark .sub{color:#1e2e33}
+
+  button{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;
+    background:transparent;border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:2px;transition:.2s}
+  button:hover{border-color:var(--gold);color:var(--gold)}
+  body.dark button{border-color:#15242a;color:#3f5a5a}
+  body.dark button:hover{border-color:var(--glow);color:var(--glow)}
+  button.lamp{border-color:var(--gold);color:var(--gold)}
+  body.dark button.lamp{border-color:var(--glow);color:var(--glow);box-shadow:0 0 14px #8ff0c822}
+
+  /* wheel */
+  .stage{position:relative}
+  svg.wheel{width:100%;max-width:620px;display:block;margin:0 auto;touch-action:none;user-select:none}
+  .ringbg{fill:var(--paper);stroke:var(--line);stroke-width:1;transition:fill 1.1s,stroke 1.1s}
+  body.dark .ringbg{fill:#070b0e;stroke:#0e1a1f}
+  .cell{stroke:var(--line);stroke-width:.7;fill:none;transition:stroke 1.1s}
+  body.dark .cell{stroke:#0c161a}
+  .rune{font-family:serif;font-size:19px;fill:var(--red);text-anchor:middle;dominant-baseline:central;transition:fill 1.1s,opacity 1.1s}
+  body.dark .rune{fill:#17272b;opacity:.9}
+  .lat{font-family:var(--disp);font-size:16px;fill:var(--ink);text-anchor:middle;dominant-baseline:central;transition:fill 1.1s}
+  body.dark .lat{fill:#0f1a1e}
+  .runehit{fill:transparent;cursor:pointer}
+  .lit .rune,.lit .lat{fill:var(--gold)!important}
+  body.dark .lit .rune, body.dark .lit .lat{fill:var(--glow)!important}
+  .mortar{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;transition:stroke 1.1s}
+  body.dark .mortar{stroke:#132024}
+  .grab{cursor:grab}.grab:active{cursor:grabbing}
+
+  .mark{opacity:0;transition:opacity 1.1s}
+  body.dark .mark{opacity:1}
+  .mark path,.mark circle,.mark line{stroke:var(--glow);fill:none;stroke-width:1.6;stroke-linecap:round;
+    filter:drop-shadow(0 0 6px #8ff0c8) drop-shadow(0 0 14px #8ff0c866)}
+  .mark.filled path{fill:var(--glow)}
+  .mark.target circle.halo{stroke:var(--glow);opacity:.5}
+  .pointer{opacity:.18;transition:opacity 1.1s}
+  body.dark .pointer{opacity:1}
+  .pointer path{stroke:var(--glow);stroke-width:2.2;fill:none;stroke-linecap:round;
+    filter:drop-shadow(0 0 7px #8ff0c8) drop-shadow(0 0 16px #8ff0c855)}
+  .pointer path.head{fill:var(--glow);stroke:var(--glow);stroke-width:1.4;stroke-linejoin:round}
+
+  /* side */
+  .side{display:flex;flex-direction:column;gap:16px}
+  .note{background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:16px 18px;
+    box-shadow:0 1px 0 #ffffff66 inset;transition:.9s}
+  body.dark .note{background:#060a0d;border-color:#101c21;color:#223238;box-shadow:none}
+  .note .cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  body.dark .note .cap{color:#1c2c31}
+  .motto{font-family:var(--disp);font-size:17px;letter-spacing:.06em;line-height:1.45}
+  .gloss{font-style:italic;font-size:15.5px}
+  .pass{font-family:serif;font-size:26px;color:var(--red);letter-spacing:.14em;transition:color 1.1s}
+  body.dark .pass{color:#1a2a2e}
+
+  .readout{display:flex;gap:10px;justify-content:center;margin-top:14px}
+  .slot{width:52px;height:62px;border:1px solid var(--line);border-radius:2px;display:grid;grid-template-rows:1fr 1fr;
+    place-items:center;background:var(--paper);transition:.9s}
+  body.dark .slot{background:#060a0d;border-color:#101c21}
+  .slot .r{font-family:serif;font-size:20px;color:var(--red);transition:color .9s}
+  body.dark .slot .r{color:#1b2b2f}
+  .slot .l{font-family:var(--disp);font-size:19px;letter-spacing:.04em}
+  body.dark .slot .l{color:#15242a}
+
+  .entry{display:flex;gap:8px;margin-top:14px;align-items:stretch}
+  input{flex:1 1 auto;min-width:0;width:100%;font-family:var(--disp);font-size:19px;letter-spacing:.26em;
+    text-align:center;text-transform:uppercase;
+    background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:10px 6px;color:var(--ink);transition:.9s}
+  .entry button{flex:0 0 auto;white-space:nowrap}
+  input:focus{outline:none;border-color:var(--gold)}
+  body.dark input{background:#060a0d;border-color:#101c21;color:#2a3c42}
+  .verdict{min-height:3.2em;font-style:italic;font-size:15.5px;margin-top:10px}
+  .ok{color:var(--gold);font-style:normal;font-family:var(--disp);letter-spacing:.06em}
+  body.dark .ok{color:var(--glow)}
+  .no{color:var(--red)}
+  .hintrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .hublink{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:2px;
+    text-decoration:none;display:inline-block;transition:.2s}
+  .hublink:hover{border-color:var(--gold);color:var(--gold)}
+  body.dark .hublink{border-color:#15242a;color:#3f5a5a}
+  body.dark .hublink:hover{border-color:var(--glow);color:var(--glow)}
+</style>
+</head>
+<body class="boot">
+<div class="wrap">
+
+  <header>
+    <div><h1 id="title">The Mortar</h1><div class="sub" id="sub"></div></div>
+    <div class="hintrow">
+      <a class="hublink" id="hub" href="#"></a>
+      <button class="lamp" id="lamp"></button>
+      <button id="ccw">◀</button><button id="cw">▶</button>
+      <button id="lang">中文</button>
+    </div>
+  </header>
+
+  <div class="stage">
+    <svg class="wheel" viewBox="-22 -22 664 664" id="svg">
+      <!-- rings -->
+      <circle class="ringbg" cx="310" cy="310" r="282"/>
+      <circle class="ringbg" cx="310" cy="310" r="232"/>
+      <circle class="ringbg" cx="310" cy="310" r="186"/>
+      <g id="outerCells"></g>
+      <g id="outerRunes"></g>
+      <g id="innerGroup">
+        <g id="innerCells"></g>
+        <g id="innerLetters"></g>
+        <!-- the key: bow at the centre, bit at the top, turns with the latin ring -->
+        <g class="mortar">
+          <circle cx="310" cy="352" r="30"/>
+          <circle cx="310" cy="352" r="19"/>
+          <path d="M310 322 v-152"/>
+          <path d="M292 286 h36 M294 268 h32"/>
+          <path d="M280 352 l-12 0 M340 352 l12 0 M310 392 l0 12"/>
+          <path d="M310 172 h20 v14 h-20"/>
+          <path d="M310 198 h13 v12 h-13"/>
+        </g>
+        <g class="pointer">
+          <path d="M310 238 v-84"/>
+          <path class="head" d="M310 132 l-15 24 h30 z"/>
+        </g>
+      </g>
+      <g id="hits"></g>
+      <g id="marks"></g>
+    </svg>
+  </div>
+
+  <aside class="side">
+    <div class="note">
+      <div class="cap" id="c-motto"></div>
+      <div class="motto" id="motto"></div>
+    </div>
+    <div class="note">
+      <div class="cap" id="c-gloss"></div>
+      <div class="gloss" id="gloss"></div>
+    </div>
+    <div class="note">
+      <div class="cap" id="c-pass"></div>
+      <div class="pass" id="passrunes"></div>
+      <div class="gloss" id="passline" style="margin-top:6px"></div>
+      <div class="readout" id="readout"></div>
+      <div class="entry">
+        <input id="answer" maxlength="4" autocomplete="off" spellcheck="false">
+        <button id="submit"></button>
+      </div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   HUB_URL — the landing page every scene links back to.
+   If the hub ever moves, THIS LINE IS THE ONLY ONE TO CHANGE in this
+   file. Nothing else in the page hard-codes the address.
+   ------------------------------------------------------------------ */
+const HUB_URL='https://ruthcgsong.github.io/folio/mysteries/';
+
+/* ===================== EN-SCRIPT ===================== */
+const EN={
+  lang:'中文', hub:'← Home', title:'Decipher the Wheel',
+  sub:'A heavy chest, and a wheel bolted into the lid. Nothing in this room opens until the wheel does.',
+  lampOn:'Put out the lamp', lampOff:'Light the lamp',
+  c_motto:'Three lines cut into the cabinet door',
+  motto:'Four hours, four marks on the dial;<br>only one cannot make its own light;<br>only one changes shape every night.<br>Turn the key to it.',
+  c_gloss:'Will, standing at the switch',
+  gloss:'In the dark people find the clues they could not see. Put the lamp out, turn the key, put the lamp on. That is all there is to it.',
+  c_pass:'Scratched inside the lid',
+  passline:'— and that is the whole of the passphrase.',
+  submit:'Enter',
+  dark:'Put the lamp out and the pestle will tell you where it is pointing.',
+  empty:'Four letters.',
+  wrongWord:(w)=>`${w}. That is not a word in any tongue in this building, which means the wheel is not where it should be.`,
+  wrongWordReal:(w)=>`${w}. A word, certainly. Not the word — the alignment is off by at least one tooth.`,
+  right:'The case opens.',
+  rightTail:'Inside: a second mortar, identical, unused, and a note in the same hand reading only — for when the first one is heard.',
+  marks:{moon:'moon',sun:'sun',star:'star',dew:'dew'}
+};
+/* ===================== CN-SCRIPT ===================== */
+const CN={
+  lang:'EN', hub:'← 主页', title:'破解轮盘',
+  sub:'你们来到了一个房间——一个沉甸甸的箱子上有个奇怪的轮盘，看来必须先破解它才行了。',
+  lampOn:'熄灯', lampOff:'点灯',
+  c_motto:'刻在柜门上的三行字',
+  motto:'四个时辰，四个刻度；<br>只有一个无法自己发光；<br>只有一个每夜变换形状。<br>把钥匙转向它。',
+  c_gloss:'Will，站在开关旁边',
+  gloss:'在黑暗中，人们反而可以发现看不见的线索。关灯，旋转钥匙，开灯，就这么简单。',
+  c_pass:'刻在盖子内侧',
+  passline:'——通行口令就是这个，没有别的了。',
+  submit:'确认',
+  dark:'把灯熄掉，杵会告诉你它指着哪里。',
+  empty:'四个字母。',
+  wrongWord:(w)=>`${w}。这不是这栋楼里任何一种语言里的词，也就是说轮盘不在它该在的位置上。`,
+  wrongWordReal:(w)=>`${w}。确实是个词。但不是那个词——对位至少差了一格。`,
+  right:'柜子开了。',
+  rightTail:'里面是：第二只研钵，一模一样，从未使用过；以及一张同一个笔迹的字条，上面只写着——留给第一只被听见的时候。',
+  marks:{moon:'月',sun:'日',star:'星',dew:'露'}
+};
+
+/* ===================== wheel data ===================== */
+/* Elder Futhark is exactly 24 runes, and the period alphabet these wheels used was
+   exactly 24 letters (I serves for J, U serves for V). 24 teeth divide into four
+   quarters cleanly, so the glowing marks sit on true 12 / 3 / 6 / 9 o'clock.        */
+const RUNES=['ᚠ','ᚢ','ᚦ','ᚨ','ᚱ','ᚲ','ᚷ','ᚹ','ᚺ','ᚾ','ᛁ','ᛃ','ᛇ','ᛈ','ᛉ','ᛊ','ᛏ','ᛒ','ᛖ','ᛗ','ᛚ','ᛜ','ᛞ','ᛟ'];
+const LAT='ABCDEFGHIKLMNOPQRSTUWXYZ'.split('');
+const N=24, STEP=360/N;
+const MARKS={ sun:0, star:6, moon:12, dew:18 };    /* 12, 3, 6 and 9 o'clock */
+const PASS=[19,7,5,19];                            /* outer indices of the four passphrase runes */
+const ANSWER='HUSH';                               /* readable only when pestle points at the moon */
+const REALWORDS=new Set(['HUSH','OATH','VEIL','MASK','RITE','SALT','ASHE','BONE','DOOR','NAME','LOST','WAKE','HARM','ACHE']);
+
+let L=EN, lang='en', dark=false, k=0;   /* k = rotation in teeth */
+const $=id=>document.getElementById(id);
+const pt=(r,ang)=>[310+r*Math.cos((ang-90)*Math.PI/180), 310+r*Math.sin((ang-90)*Math.PI/180)];
+
+function buildRings(){
+  let oc='',or='',ic='',il='',hits='';
+  for(let i=0;i<N;i++){
+    const a=i*STEP;
+    const [x1,y1]=pt(232,a-STEP/2), [x2,y2]=pt(282,a-STEP/2);
+    oc+=`<line class="cell" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    const [rx,ry]=pt(257,a);
+    or+=`<text class="rune" id="rune${i}" x="${rx}" y="${ry}">${RUNES[i]}</text>`;
+    const [hx,hy]=pt(257,a);
+    hits+=`<circle class="runehit" data-i="${i}" cx="${hx}" cy="${hy}" r="15"/>`;
+    const [x3,y3]=pt(186,a-STEP/2), [x4,y4]=pt(232,a-STEP/2);
+    ic+=`<line class="cell" x1="${x3}" y1="${y3}" x2="${x4}" y2="${y4}"/>`;
+    const [lx,ly]=pt(209,a);
+    il+=`<text class="lat" id="lat${i}" x="${lx}" y="${ly}">${LAT[i]}</text>`;
+  }
+  $('outerCells').innerHTML=oc; $('outerRunes').innerHTML=or;
+  $('innerCells').innerHTML=ic; $('innerLetters').innerHTML=il; $('hits').innerHTML=hits;
+
+  let m='';
+  const shapes={
+    moon:'<path d="M6 -9 a10 10 0 1 0 0 18 a13 13 0 0 1 0 -18 z"/>',
+    sun:'<circle cx="0" cy="0" r="6"/><line x1="0" y1="-11" x2="0" y2="-15"/><line x1="0" y1="11" x2="0" y2="15"/><line x1="-11" y1="0" x2="-15" y2="0"/><line x1="11" y1="0" x2="15" y2="0"/><line x1="-8" y1="-8" x2="-11" y2="-11"/><line x1="8" y1="8" x2="11" y2="11"/><line x1="8" y1="-8" x2="11" y2="-11"/><line x1="-8" y1="8" x2="-11" y2="11"/>',
+    star:'<path d="M0 -13 L3.5 -3.5 L13 0 L3.5 3.5 L0 13 L-3.5 3.5 L-13 0 L-3.5 -3.5 Z"/>',
+    dew:'<path d="M0 -12 C6 -4 10 0 10 4 a10 10 0 0 1 -20 0 c0 -4 4 -8 10 -16 z"/><path d="M-14 12 q14 5 28 0"/>'
+  };
+  for(const [name,idx] of Object.entries(MARKS)){
+    const [mx,my]=pt(306,idx*STEP);
+    m+=`<g class="mark ${name==='star'?'filled':''}" data-m="${name}" transform="translate(${mx},${my})">${shapes[name]}</g>`;
+  }
+  $('marks').innerHTML=m;
+}
+
+function render(){
+  $('innerGroup').setAttribute('transform',`rotate(${k*STEP} 310 310)`);
+  const slots=PASS.map((i,n)=>{
+    const letter=LAT[((i-k)%N+N)%N];
+    return `<div class="slot"><div class="r">${RUNES[i]}</div><div class="l">${dark?'·':letter}</div></div>`;
+  }).join('');
+  $('readout').innerHTML=slots;
+  $('passrunes').textContent=PASS.map(i=>RUNES[i]).join(' ');
+}
+function paintText(){
+  $('title').textContent=L.title; $('sub').textContent=L.sub; $('lang').textContent=L.lang;
+  $('hub').textContent=L.hub; $('hub').href=HUB_URL;
+  $('lamp').textContent=dark?L.lampOff:L.lampOn;
+  $('c-motto').textContent=L.c_motto; $('motto').innerHTML=L.motto;
+  $('c-gloss').textContent=L.c_gloss; $('gloss').textContent=L.gloss;
+  $('c-pass').textContent=L.c_pass; $('passline').textContent=L.passline;
+  $('submit').textContent=L.submit;
+  render();
+}
+
+/* rotation */
+function turn(d){ k=((k+d)%N+N)%N; render(); }
+$('cw').onclick=()=>turn(1); $('ccw').onclick=()=>turn(-1);
+let dragging=false, startAng=0, startK=0;
+function angOf(ev){
+  const r=$('svg').getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const p=ev.touches?ev.touches[0]:ev;
+  return Math.atan2(p.clientY-cy,p.clientX-cx)*180/Math.PI;
+}
+$('svg').addEventListener('pointerdown',e=>{ dragging=true; startAng=angOf(e); startK=k; $('svg').setPointerCapture(e.pointerId); });
+$('svg').addEventListener('pointermove',e=>{ if(!dragging)return;
+  const d=angOf(e)-startAng; k=((startK+Math.round(d/STEP))%N+N)%N; render(); });
+$('svg').addEventListener('pointerup',()=>dragging=false);
+$('svg').addEventListener('pointercancel',()=>dragging=false);
+
+/* rune hover → show the letter it currently sits over */
+$('hits').addEventListener('mouseover',e=>{
+  const c=e.target.closest('.runehit'); if(!c) return;
+  const i=+c.dataset.i, j=((i-k)%N+N)%N;
+  $('rune'+i).parentElement.classList.add('lit');
+  $('rune'+i).classList.add('lit'); $('lat'+j).classList.add('lit');
+  $('rune'+i).style.fill=''; // class handles it
+  $('rune'+i).setAttribute('class','rune lit'); $('lat'+j).setAttribute('class','lat lit');
+});
+$('hits').addEventListener('mouseout',e=>{
+  document.querySelectorAll('.rune.lit').forEach(n=>n.setAttribute('class','rune'));
+  document.querySelectorAll('.lat.lit').forEach(n=>n.setAttribute('class','lat'));
+});
+
+/* lamp */
+$('lamp').onclick=()=>{ dark=!dark; document.body.classList.toggle('dark',dark);
+  $('lamp').textContent=dark?L.lampOff:L.lampOn; render(); };
+
+/* answer */
+$('submit').onclick=check;
+$('answer').addEventListener('keydown',e=>{ if(e.key==='Enter') check(); });
+function check(){
+  const v=$('answer').value.trim().toUpperCase();
+  const V=$('verdict');
+  if(v.length<4){ V.className='verdict'; V.textContent=L.empty; return; }
+  if(v===ANSWER && k===MARKS.moon){
+    V.className='verdict'; V.innerHTML=`<span class="ok">${L.right}</span><br>${L.rightTail}`;
+    return;
+  }
+  V.className='verdict no';
+  V.textContent = REALWORDS.has(v) ? L.wrongWordReal(v) : L.wrongWord(v);
+}
+
+$('lang').onclick=()=>{ lang=(lang==='en')?'cn':'en'; L=(lang==='en')?EN:CN;
+  document.documentElement.lang=(lang==='en')?'en':'zh'; paintText(); };
+
+buildRings(); paintText();
+requestAnimationFrame(()=>setTimeout(()=>document.body.classList.remove('boot'),70));
+</script>
+</body>
+</html>
