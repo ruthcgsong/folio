@@ -3,14 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Four Lenses</title>
+<title>Four Lenses — The College of Mysteries</title>
+<meta name="description" content="One laboratory, drawn once. Four members of the club look at it, and each sees a different layer. A perception-gating scene from The College of Mysteries.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Four Lenses — The College of Mysteries">
+<meta property="og:description" content="One laboratory, drawn once. Four members of the club look at it, and each sees a different layer.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Newsreader:ital,opsz,wght@0,6..72,300..600&family=Noto+Sans+SC:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
-img{max-width:100%}
-[hidden]{display:none!important}
-</style>
 <style>
 /* Layout: one dark lab, four overlays over it, a lens rail beneath. Single dark look by choice. */
 :root{
@@ -25,13 +23,30 @@ img{max-width:100%}
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--void);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.6;
+img{max-width:100%}
+[hidden]{display:none!important}
+body{margin:0;background:var(--void);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:26px 48px}
+  padding-top:max(20px,env(safe-area-inset-top,0px));
+  padding-bottom:max(48px,env(safe-area-inset-bottom,0px))}
 body[data-lang="zh"] .readout,body[data-lang="zh"] .lede{font-family:var(--cjk)}
 body[data-lang="zh"] h1{font-family:var(--cjk);letter-spacing:.08em}
 .wrap{max-width:960px;margin:0 auto}
+
+/* ── page chrome: title on the left, two square icon buttons top right.
+      Same block on every scene page, so the controls never move between pages. ── */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.htext{flex:1 1 auto;min-width:0}
+.chrome{flex:0 0 auto;display:flex;gap:8px;padding-top:4px}
+.icbtn{min-width:70px;height:34px;padding:0 12px;display:grid;place-items:center;cursor:pointer;
+  background:transparent;color:var(--dim);border:1px solid var(--rule);border-radius:2px;
+  font-family:'IBM Plex Mono','Noto Sans SC','PingFang SC',ui-monospace,monospace;
+  font-size:11.5px;letter-spacing:.12em;text-decoration:none;white-space:nowrap;
+  transition:color .2s,border-color .2s}
+.icbtn:hover{color:var(--ink);border-color:var(--ink)}
+.icbtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
 h1{font-family:'Cinzel',Georgia,serif;font-weight:500;font-size:clamp(24px,4vw,38px);margin:0 0 8px;letter-spacing:.02em}
 .lede{color:var(--dim);margin:0 0 18px;max-width:62ch}
@@ -83,22 +98,29 @@ body[data-lang="zh"] .readout .who{font-family:var(--cjk);text-transform:none;le
 .readout .mech{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.03em}
 body[data-lang="zh"] .readout .mech{font-family:var(--cjk);font-size:13px;letter-spacing:0}
 
-.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:16px;
+.controls{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:16px;
   font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+body[data-lang="zh"] .controls{font-family:var(--cjk);text-transform:none;letter-spacing:.03em;font-size:12px}
 .controls label{display:flex;align-items:center;gap:7px}
 input[type=range]{accent-color:var(--ink);width:120px}
 input[type=checkbox]{accent-color:var(--ink)}
-button#lang{font-family:var(--mono);font-size:11px;letter-spacing:.1em;cursor:pointer;background:transparent;
-  color:var(--ink);border:1px solid var(--rule);border-radius:2px;padding:7px 11px;margin-left:auto}
-button#lang:hover{border-color:var(--ink)}
 .note{margin-top:24px;border-top:1px solid var(--rule);padding-top:14px;font-size:15px;color:var(--dim);max-width:70ch}
 .note b{color:var(--ink);font-weight:500}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1 id="h1">Four Lenses</h1>
-  <p class="lede" id="lede">One lab, drawn once. Each lens is a different member of the club looking at it. Move the light across the room — on a phone, drag.</p>
+
+  <div class="hdr">
+    <div class="htext">
+      <h1 id="h1">Four Lenses</h1>
+      <p class="lede" id="lede">One lab, drawn once. Each lens is a different member of the club looking at it. Move the light across the room — on a phone, drag.</p>
+    </div>
+    <div class="chrome">
+      <a class="icbtn" id="home" href="#">HOME</a>
+      <button class="icbtn" id="lang">中文</button>
+    </div>
+  </div>
 
   <div class="stage torch" id="stage" data-lens="none">
 
@@ -212,11 +234,11 @@ button#lang:hover{border-color:var(--ink)}
   </div>
 
   <div class="rail">
-    <button class="lens" data-k="none" aria-pressed="true"><b id="plainLbl">Plain</b><span class="sub">1 · no gift</span></button>
-    <button class="lens" data-k="marc" aria-pressed="false"><b>Marc</b><span class="sub">2 · artistic insight</span></button>
-    <button class="lens" data-k="will" aria-pressed="false"><b>Will</b><span class="sub">3 · erudite</span></button>
-    <button class="lens" data-k="ivy" aria-pressed="false"><b>Ivy</b><span class="sub">4 · clinical read</span></button>
-    <button class="lens" data-k="rue" aria-pressed="false"><b>Rue</b><span class="sub">5 · emotional resonance</span></button>
+    <button class="lens" data-k="none" aria-pressed="true"><b id="plainLbl">Plain</b><span class="sub">no gift</span></button>
+    <button class="lens" data-k="marc" aria-pressed="false"><b>Marc</b><span class="sub">extraordinary vision</span></button>
+    <button class="lens" data-k="will" aria-pressed="false"><b>Will</b><span class="sub">erudite</span></button>
+    <button class="lens" data-k="ivy" aria-pressed="false"><b>Ivy</b><span class="sub">trained eye</span></button>
+    <button class="lens" data-k="rue" aria-pressed="false"><b>Rue</b><span class="sub">emotional resonance</span></button>
   </div>
 
   <div class="readout" id="readout"></div>
@@ -224,20 +246,25 @@ button#lang:hover{border-color:var(--ink)}
   <div class="controls">
     <label><span id="lLight">Light</span> <input type="range" id="rad" min="80" max="560" value="150"></label>
     <label><input type="checkbox" id="full"> <span id="lFlood">Flood the room</span></label>
-    <span id="lKeys">keys 1–5</span>
-    <button id="lang">中文</button>
   </div>
 </div>
 
 <script>
+/* ──────────────────────────────────────────────────────────────
+   HOME_URL — the landing page every scene links back to.
+   If the landing page ever moves, THIS LINE IS THE ONLY ONE TO
+   CHANGE in this file. Nothing else here hard-codes the address.
+   ────────────────────────────────────────────────────────────── */
+const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
+
 /* ══════════════════════════════════════════════════════════════
    EN-SCRIPT — English lines, one block per lens.
    ══════════════════════════════════════════════════════════════ */
 const EN={
-  ui:{hintNone:'No lens — the lab as the player sees it', light:'Light', flood:'Flood the room', keys:'keys 1–5',
-      title:'Four Lenses', plain:'Plain',
+  ui:{hintNone:'No lens — the lab as the player sees it', light:'Light', flood:'Flood the room',
+      home:'HOME', langLabel:'中文', title:'Four Lenses', plain:'Plain',
       lede:'A seemingly unremarkable lab. Through the eyes of the four, it is anything but. Put on their lenses and look again.',
-      rail:['1 · no gift','2 · extraordinary vision','3 · erudite','4 · trained eye','5 · emotional resonance']},
+      rail:['no gift','extraordinary vision','erudite','trained eye','emotional resonance']},
   art:{
     marc:['the marks on the wall —','they are honeycombs.','regular. repeating.',
           'something wet has moved','along this pipe — and it','takes a turn, halfway.'],
@@ -259,10 +286,10 @@ const EN={
    CN-SCRIPT — 中文台词。只需修改这一块；人物名保持英文不译。
    ══════════════════════════════════════════════════════════════ */
 const CN={
-  ui:{hintNone:'未使用天赋 — 玩家眼中的实验室', light:'光圈', flood:'照亮整个房间', keys:'按 1–5 切换',
-      title:'四象视角', plain:'普通',
+  ui:{hintNone:'未使用天赋 — 玩家眼中的实验室', light:'光圈', flood:'照亮整个房间',
+      home:'主页', langLabel:'EN', title:'四象视角', plain:'普通',
       lede:'一间看似平平无奇的实验室。但在四人眼里，可就没那么简单了。戴上他们的“眼睛”一探究竟！',
-      rail:['1 · 普通状态','2 · 超级视觉','3 · 博学之士','4 · 训练有素','5 · 情感共鸣']},
+      rail:['普通状态','超级视觉','博学之士','训练有素','情感共鸣']},
   art:{
     marc:['墙上的痕迹……','是规整的蜂巢形……','',
           '像有湿润的痕迹','在沿着管道走，','但在中途拐了个弯？？'],
@@ -322,31 +349,28 @@ function setRadius(){
   stage.classList.toggle('torch',!full.checked);
 }
 rad.addEventListener('input',setRadius); full.addEventListener('change',setRadius);
-document.addEventListener('keydown',e=>{
-  const m={'1':'none','2':'marc','3':'will','4':'ivy','5':'rue'}[e.key];
-  if(m){setLens(m);e.preventDefault();}
-});
 document.querySelectorAll('.lens').forEach(b=>b.onclick=()=>setLens(b.dataset.k));
 
-document.getElementById('lang').onclick=e=>{
-  lang = lang==='zh' ? 'en' : 'zh';
-  e.target.textContent = lang==='zh' ? 'EN' : '中文';
-  document.body.dataset.lang=lang;
-  document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
-  const u=T().ui;
+function paintChrome(){
+  const u=T().ui, home=document.getElementById('home'), langb=document.getElementById('lang');
+  home.href=HOME_URL; home.textContent=u.home;
+  /* the language button always shows the language you would switch TO */
+  langb.textContent=u.langLabel;
   document.getElementById('lede').textContent=u.lede;
   document.getElementById('h1').textContent=u.title;
   document.getElementById('plainLbl').textContent=u.plain;
   document.getElementById('lLight').textContent=u.light;
   document.getElementById('lFlood').textContent=u.flood;
-  document.getElementById('lKeys').textContent=u.keys;
   document.querySelectorAll('.lens .sub').forEach((s,i)=>s.textContent=u.rail[i]);
-  paintArt(); setLens(curLens);
+}
+document.getElementById('lang').onclick=()=>{
+  lang = lang==='zh' ? 'en' : 'zh';
+  document.body.dataset.lang=lang;
+  document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
+  paintChrome(); paintArt(); setLens(curLens);
 };
 
-document.getElementById('lede').textContent=EN.ui.lede;
-document.querySelectorAll('.lens .sub').forEach((el,i)=>el.textContent=EN.ui.rail[i]);
-paintArt(); setRadius(); setLens('none');
+paintChrome(); paintArt(); setRadius(); setLens('none');
 </script>
 </body>
 </html>
