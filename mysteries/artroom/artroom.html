@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Origami Game — The College of Mysteries</title>
+<meta name="description" content="A corridor folded like paper, and a four-dimensional body crossing an art studio. A playable scene from The College of Mysteries.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Origami Game — The College of Mysteries">
+<meta property="og:description" content="A corridor folded like paper, and a four-dimensional body crossing an art studio. A playable scene from The College of Mysteries.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Noto+Serif+SC:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one stage, two scenes — the hall folds, then the studio. Dialogue over it, controls beneath. */
+:root{
+  --ink:#0C1216; --rule:#26323A; --fg:#E4E1D8; --dim:#8B949C;
+  --paper:#EADFCB; --marc:#86A86F; --rue:#9CBAD9; --hot:#E0453A; --calm:#7CC8F5;
+  --title:'Cinzel',Georgia,serif; --display:'Newsreader',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --cjk:'Noto Serif SC','Songti SC',serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ink);color:var(--fg);font-family:var(--display);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:max(24px,env(safe-area-inset-top,0px)) max(44px,env(safe-area-inset-bottom,0px))}
+img{max-width:100%}
+body[data-lang="zh"]{font-family:var(--cjk)}
+body[data-lang="zh"] h1{font-family:var(--cjk);letter-spacing:.08em}
+.wrap{max-width:1040px;margin:0 auto}
+h1{font-family:var(--title);font-weight:500;font-size:clamp(24px,4vw,38px);margin:0 0 8px;letter-spacing:.02em}
+.lede{color:var(--dim);margin:0;max-width:64ch}
+
+/* page chrome: title left, HOME + language right. Identical block on every scene page,
+   so the two site-level controls never move as you go from one scene to the next.
+   Everything that belongs to the scene itself stays down in .bar, under the stage. */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+.htext{flex:1 1 auto;min-width:0}
+.chrome{flex:0 0 auto;display:flex;gap:8px;padding-top:4px}
+.icbtn{min-width:70px;height:34px;padding:0 12px;display:grid;place-items:center;cursor:pointer;
+  background:transparent;color:var(--dim);border:1px solid var(--rule);border-radius:2px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  text-decoration:none;white-space:nowrap;transition:color .2s,border-color .2s}
+.icbtn:hover{background:transparent;color:var(--fg);border-color:var(--fg)}
+body[data-lang="zh"] .icbtn{font-family:var(--cjk);font-size:12.5px;letter-spacing:.08em;text-transform:none}
+
+.stage{position:relative;aspect-ratio:16/9;border:1px solid var(--rule);border-radius:3px;overflow:hidden;
+  background:#05080A;perspective:1500px;perspective-origin:50% 48%}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;pointer-events:none}
+.scene.on{opacity:1}
+
+/* ── scene A · the hall ── */
+.paper{position:absolute;inset:0;transform-style:preserve-3d}
+.paper.w1{animation:warp1 7s ease-in-out infinite}
+.paper.w2{animation:warp2 3.4s ease-in-out infinite}
+@keyframes warp1{0%,100%{transform:skewY(0deg) scale(1)}33%{transform:skewY(.22deg) scale(1.006)}
+  66%{transform:skewX(.28deg) scale(1.003)}}
+@keyframes warp2{0%,100%{transform:skewY(0deg) scale(1.004)}20%{transform:skewY(.55deg) scale(1.014)}
+  45%{transform:skewX(-.6deg) scale(1.006)}70%{transform:skewY(-.5deg) scale(1.016)}}
+.half{position:absolute;top:0;height:100%;width:50%;background-image:url("hall.jpg");
+  background-size:200% 100%;background-repeat:no-repeat;will-change:transform}
+.right{left:50%;background-position:right center}
+.left{left:0;background-position:left center;transform-origin:right center}
+.left .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,6,10,.92),rgba(2,6,10,.35));opacity:0}
+.crease{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;opacity:0;transition:opacity .6s;
+  background:linear-gradient(180deg,transparent,var(--marc) 14%,var(--marc) 86%,transparent);
+  box-shadow:0 0 22px 3px rgba(134,168,111,.45)}
+.crease.on{opacity:.85}
+.mark{position:absolute;width:11px;height:11px;margin:-5px 0 0 -5px;border-radius:50%;
+  background:#D98A5A;box-shadow:0 0 14px 3px rgba(217,138,90,.55);opacity:0;transition:opacity .5s}
+.mark.on{animation:flick 1.9s ease-in-out infinite}
+@keyframes flick{0%,100%{opacity:.95}50%{opacity:.32}}
+.pc{position:absolute;height:17%;margin-left:-2%;opacity:0;transition:opacity .45s ease;
+  filter:brightness(.80) contrast(1.04) saturate(.86) drop-shadow(0 8px 12px rgba(0,0,0,.7));pointer-events:none}
+.pc.on{opacity:.65}
+
+/* ── scene B · the studio ── */
+.room{position:absolute;inset:-3%;background:url("artroom.jpg") center/cover no-repeat;
+  filter:brightness(.52) saturate(.9) contrast(1.06);transition:filter 1.4s}
+.wash{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;
+  background:radial-gradient(circle at var(--bx,50%) var(--by,46%),rgba(224,69,58,.55),transparent 62%)}
+.corona{position:absolute;left:50%;top:46%;width:16%;aspect-ratio:1;border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%);mix-blend-mode:screen;
+  background:radial-gradient(circle,rgba(255,180,150,.9) 0%,rgba(236,96,70,.55) 38%,rgba(150,24,18,.18) 68%,transparent 100%);
+  filter:blur(10px)}
+.core{position:absolute;left:50%;top:46%;width:16%;aspect-ratio:1;border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 40% 36%,#FFF3E8 0%,#FFB097 14%,#F2503F 46%,#9E1C15 74%,rgba(80,10,8,.25) 92%,transparent 100%);
+  box-shadow:0 0 40px 10px rgba(226,74,60,.45)}
+
+.fade{position:absolute;inset:0;background:#05080A;opacity:0;pointer-events:none;z-index:3;transition:opacity 1.2s ease}
+.fade.on{opacity:1}
+.hit{position:absolute;inset:0;background:var(--hot);opacity:0;transition:opacity .2s;pointer-events:none;mix-blend-mode:screen}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,transparent 38%,rgba(3,6,9,.58) 92%)}
+
+.top{position:absolute;top:0;left:0;right:0;padding:10px 14px;display:flex;gap:12px;align-items:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+  text-shadow:0 1px 6px #000;pointer-events:none;z-index:4}
+body[data-lang="zh"] .top{font-family:var(--cjk);text-transform:none;letter-spacing:.05em;font-size:12px}
+.top b{color:var(--fg);font-variant-numeric:tabular-nums}
+.track{flex:0 1 110px;height:3px;background:rgba(255,255,255,.18);min-width:50px}
+.track i{display:block;height:100%;background:var(--rue);transition:width .45s ease}
+.track i.low{background:var(--hot)}
+.delta{opacity:0;transition:opacity .3s;font-weight:500}
+.delta.show{opacity:1}
+.roll{margin-left:auto;text-align:right}
+.roll .lv{letter-spacing:.14em} .roll .lv.good{color:var(--marc)} .roll .lv.bad{color:var(--hot)}
+
+.slab{position:absolute;left:0;right:0;bottom:0;padding:44px 20px 16px;z-index:4;
+  background:linear-gradient(transparent,rgba(4,7,10,.92) 46%)}
+.who{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:4px;min-height:1em}
+body[data-lang="zh"] .who{font-family:var(--cjk);text-transform:none;letter-spacing:.06em;font-size:13px}
+.who.r{color:var(--rue)} .who.m{color:var(--marc)}
+.say{margin:0;font-size:clamp(15px,2.2vw,19px);max-width:58ch;min-height:2.8em}
+.say em{font-style:italic;color:var(--dim)}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;min-height:42px}
+button{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  background:rgba(234,223,203,.06);color:var(--paper);border:1px solid rgba(234,223,203,.34);
+  padding:10px 15px;border-radius:2px;transition:background .2s,border-color .2s}
+body[data-lang="zh"] button{font-family:var(--cjk);text-transform:none;letter-spacing:.04em;font-size:14px}
+button:hover:not(:disabled){background:rgba(234,223,203,.17);border-color:var(--paper)}
+button:disabled{opacity:.28;cursor:default}
+button.m{color:var(--marc);border-color:rgba(134,168,111,.45);background:rgba(134,168,111,.07)}
+button.m:hover:not(:disabled){background:rgba(134,168,111,.2);border-color:var(--marc)}
+button.hot{color:#D98A5A;border-color:rgba(217,138,90,.5);background:rgba(217,138,90,.08)}
+button.hot:hover:not(:disabled){background:rgba(217,138,90,.22);border-color:#D98A5A}
+button.still{color:var(--calm);border-color:rgba(124,200,245,.5);background:rgba(124,200,245,.08)}
+button.still:hover:not(:disabled){background:rgba(124,200,245,.2);border-color:var(--calm)}
+button.ghost{color:var(--dim);border-color:var(--rule);background:transparent}
+button:focus-visible{outline:2px solid var(--marc);outline-offset:2px}
+.spacer{margin-left:auto}
+.endmark[hidden]{display:none}
+.endmark{display:inline-flex;align-items:center;gap:11px;padding:10px 2px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.endmark::before{content:"";width:30px;height:1px;background:var(--rule)}
+.endmark::after{content:"";width:30px;height:1px;background:var(--rule)}
+body[data-lang="zh"] .endmark{font-family:var(--cjk);text-transform:none;letter-spacing:.14em;font-size:13px}
+@media (prefers-reduced-motion:reduce){.paper.w1,.paper.w2{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div class="htext">
+      <h1 id="h1">The Origami Game</h1>
+      <p class="lede" id="lede">They opened a door on the west side of the building and came out on the east. The corridors twist like paper folded too many times. What waits in the studio will cost a great deal more SAN.</p>
+    </div>
+    <div class="chrome">
+      <a class="icbtn" id="home" href="#">HOME</a>
+      <button class="icbtn" id="lang">中文</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <div class="scene on" id="sceneHall">
+      <div class="paper w1" id="paper">
+        <div class="half right"></div>
+        <div class="half left" id="left"><div class="shade" id="shade"></div></div>
+        <div class="crease" id="crease"></div>
+      </div>
+      <div class="mark" id="mA"></div>
+      <div class="mark" id="mB"></div>
+      <img id="rue" class="pc" src="rue.webp" alt="">
+      <img id="marc" class="pc" src="marc.webp" alt="">
+    </div>
+
+    <div class="scene" id="sceneRoom">
+      <div class="room" id="room"></div>
+      <div class="wash" id="wash"></div>
+      <div class="corona" id="corona"></div>
+      <div class="core" id="core"></div>
+    </div>
+
+    <div class="fade" id="fade"></div>
+    <div class="hit" id="hit"></div>
+    <div class="vig"></div>
+
+    <div class="top">
+      <span id="sanLbl">SAN</span><span class="track"><i id="sanbar" style="width:100%"></i></span>
+      <b id="sann">70</b><span class="delta" id="delta"></span>
+      <span class="roll" id="roll"></span>
+    </div>
+    <div class="slab">
+      <div class="who r" id="who">Rue</div>
+      <p class="say" id="say"></p>
+    </div>
+  </div>
+
+  <div class="bar" id="bar">
+    <button id="go">Continue →</button>
+    <span id="endmark" class="endmark" hidden>End of scene</span>
+    <button id="check" class="m" hidden>Marc looks at it · Art 70</button>
+    <button id="jump" class="hot" hidden>Climb the rail and jump</button>
+    <button id="mL" hidden>← Get out of its way</button>
+    <button id="mR" hidden>Get out of its way →</button>
+    <button id="mB2" hidden>Back toward the door</button>
+    <button id="still" class="still" hidden>Stand still</button>
+    <button id="reset" class="ghost spacer">Reset</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   EN-SCRIPT — English lines.
+   A = the hall:   OPENING · CHECK_FAIL · CHECK_SUCCESS · JUMP · LANDING · TRANS
+   B = the studio: INTRO · BUMPS · CHECK_FAIL · CHECK_SUCCESS · EXPLAIN · ENDING
+   ══════════════════════════════════════════════════════════════ */
+const EN={
+  ui:{title:'The Origami Game',
+      lede:'They opened a door on the west side of the building and came out on the east. The corridors twist like paper folded too many times. What waits in the studio will cost a great deal more SAN.',
+      san:'SAN', go:'Continue →', check:'Marc looks at it · Art 70', jump:'Climb the rail and jump',
+      mL:'← Get out of its way', mR:'Get out of its way →', mB:'Back toward the door',
+      still:'Stand still', reset:'Reset', end:'End of scene',
+      home:'HOME', langLabel:'中文'},
+  A:{
+    OPENING:[
+      ['Rue','Marc, the whole place is shaking! Is this an earthquake?'],
+      ['Marc','It isn’t just the floor. Hold on — the whole building’s gone like paper. Something is folding it.'],
+      ['Rue','Folding?! Marc, which way are we supposed to go?'],
+      ['','<em>The floorboards under them let out a dull crack and drop another inch.</em>']
+    ],
+    CHECK_FAIL:[['Marc','It keeps moving on me. Let me look again.']],
+    CHECK_SUCCESS:[
+      ['Marc','Here. Jump from here, straight across — when it folds, we’ll be on the other side!'],
+      ['Marc','Hold my hand. Close your eyes if you need to.'],
+      ['Rue','I’m trusting you this once. If the fall doesn’t kill you, I will.']
+    ],
+    JUMP:[['Marc','Now!']],
+    LANDING:[['Rue','<em>That was incredible — one short step forward and we’re on the far side of the hall. Let’s not stay here. Keep moving!</em>']],
+    TRANS:[['','<em>They ran out along the corridor and into the art building.</em>']]
+  },
+  B:{
+    INTRO:[
+      ['Rue','Your studio? Thank god, finally— …wait. What is that? One of your props? Why is it floating?'],
+      ['Marc','That isn’t from this room. Careful — don’t touch it!'],
+      ['Rue','It’s getting bigger, and it’s coming straight at us. Run!']
+    ],
+    BUMPS:[
+      ['Rue','Ow! I think I just walked into your plaster bust. Whose nose is that sharp — David’s or Voltaire’s?'],
+      ['Marc','Look out! Turpentine and thinner, right by your left hand!'],
+      ['Rue','Bit late— sss. Your palette knife just opened my hand. Glad it wasn’t my carotid.']
+    ],
+    CHECK_FAIL:[['Marc','Let me calm down and look at it properly. It keeps changing shape — its path should be…']],
+    CHECK_SUCCESS:[['Marc','Stop. Both of us, stop moving. Right now.']],
+    EXPLAIN:[
+      ['Marc','Rue, listen. It isn’t a ball growing and flying at us. It’s a four-dimensional body, passing through our world.'],
+      ['Rue','Marc… was any of that in a language spoken on Earth?'],
+      ['Marc','Think of our three dimensions as the surface of water. An iron ball goes through, and the surface only ever sees a circle — growing, shrinking, gone. That ball is its shadow.']
+    ],
+    ENDING:[
+      ['Rue','So it was never going to hurt us. Look at the state of us — all that panic for nothing. You’ve got a bruise coming up!'],
+      ['Marc','I’ve seen plenty of strange things. Never one of these. Lucky I wasn’t alone — I’m not sure I’d have come back so fast.']
+    ]
+  }
+};
+
+/* ══════════════════════════════════════════════════════════════
+   CN-SCRIPT — 中文台词。只需修改这一块；人物名保持英文不译。
+   A 大厅：OPENING 开场 · CHECK_FAIL 检定失败 · CHECK_SUCCESS 检定成功
+          JUMP 起跳 · LANDING 落地 · TRANS 过场
+   B 画室：INTRO 开场 · BUMPS 乱跑时撞到东西 · CHECK_FAIL 检定失败
+          CHECK_SUCCESS 检定成功 · EXPLAIN 解释 · ENDING 收尾
+   ══════════════════════════════════════════════════════════════ */
+const CN={
+  ui:{title:'折纸游戏',
+      lede:'他们从楼西侧推开一扇门，却从东侧走了出来。整个空间都错乱了：走廊像一张被反复揉折的牛皮纸，扭来扭去，仿佛有一只看不见的手正在折它。而之后在画室里等着他们的东西，更是让人SAN值狂掉……',
+      san:'SAN', go:'继续 →', check:'让 Marc 看一看 · 艺术 70', jump:'翻过栏杆，跳',
+      mL:'← 往左躲', mR:'往右躲 →', mB:'退回门边',
+      still:'站着别动', reset:'重新开始', end:'本场景结束',
+      home:'主页', langLabel:'EN'},
+  A:{
+    OPENING:[
+      ['Rue','Marc，这地方在摇晃！是地震吗？'],
+      ['Marc','不只是地面。等一下——整栋楼都像是纸做的一样了，好像有谁在拿它折纸玩儿。'],
+      ['Rue','折纸！？Marc，现在我们怎么走？'],
+      ['','<em>脚下的木地板发出一声闷响，又往下沉了一寸。</em>']
+    ],
+    CHECK_FAIL:[['Marc','它一直在乱动。我再看一次。']],
+    CHECK_SUCCESS:[
+      ['Marc','就是这里。从这里往对面跳！一会儿折叠的时候，我们就到对面了！'],
+      ['Marc','抓住我的手。怕的话就闭上眼睛。'],
+      ['Rue','我就信你这一次，不然，摔不死你我也得揍死你。']
+    ],
+    JUMP:[['Marc','就是现在！']],
+    LANDING:[['Rue','<em>好神奇！只是往前迈了一小步，我们已经在大厅对面了！此地不宜久留，往前走！</em>']],
+    TRANS:[['','<em>他们从走廊跑了出去，来到了艺术楼。</em>']]
+  },
+  B:{
+    INTRO:[
+      ['Rue','Marc，这不是你的画室吗？我们总算能喘口气啦。哎，你看那是什么？是你静物写生用的球吗？它怎么在飘！？'],
+      ['Marc','它不是这间画室里的东西。小心，别碰！'],
+      ['Rue','它越变越大，还冲我们飞过来了，快跑！']
+    ],
+    BUMPS:[
+      ['Rue','哎呦！我好像撞到你的石膏像了？谁的鼻子那么尖啊，大卫还是伏尔泰？'],
+      ['Marc','小心！你左边是松节油和香蕉水！'],
+      ['Rue','你怎么不早说……嘶——你的调色刀好像把我手划伤了，我该庆幸它划的不是我的颈动脉？']
+    ],
+    CHECK_FAIL:[['Marc','我得冷静下来再看看。它一直在变形，它的轨迹应该是……']],
+    CHECK_SUCCESS:[['Marc','停。我们两个都别动。现在就停下。']],
+    EXPLAIN:[
+      ['Marc','Rue，听我说，这东西不是一个不停变大、四处乱飞的球。它……其实是一个四维物体，正从我们的世界穿过去。'],
+      ['Rue','Marc……你说的是地球上的语言么？'],
+      ['Marc','你就把我们的三维空间想成水面。一个铁球穿过水面时，它的横截面只是一个圆：先变大，再变小，最后消失。我们眼前这个球，就是那个四维物体的投影。']
+    ],
+    ENDING:[
+      ['Rue','那按理说它应该伤不到我们才对……瞧我们这狼狈样，原来是虚惊一场。你额头也青了一块！'],
+      ['Marc','我确实见过不少怪东西，不过这玩意儿我还是第一次见。还好，这回不是一个人——不然我未必能这么快回过神。']
+    ]
+  }
+};
+
+/* ══════════════════════════════════════════════════════════════
+   Nothing below this line needs editing for a translation.
+   ══════════════════════════════════════════════════════════════ */
+/* ------------------------------------------------------------------
+   HOME_URL — the landing page every scene links back to.
+   If the landing page ever moves, THIS LINE IS THE ONLY ONE TO CHANGE
+   in this file. Nothing else here hard-codes the address.
+   ------------------------------------------------------------------ */
+const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
+
+const $=id=>document.getElementById(id);
+const POS={
+  marc:{x0:0.100, y0:0.292, x1:0.848, y1:0.344, f0: 1, f1:-1},
+  rue :{x0:0.148, y0:0.334, x1:0.896, y1:0.316, f0:-1, f1: 1}
+};
+const AX=0.124, AY=0.314, BX=0.872, BY=0.314, RUEH=17;
+const MAXSAN=70;
+
+const paper=$('paper'), left=$('left'), shade=$('shade'), crease=$('crease'),
+      mA=$('mA'), mB=$('mB'), rue=$('rue'), marc=$('marc'),
+      room=$('room'), core=$('core'), corona=$('corona'), wash=$('wash'), hitEl=$('hit'),
+      sanBar=$('sanbar'), sanN=$('sann'), delta=$('delta'), rollEl=$('roll'),
+      say=$('say'), who=$('who'), goB=$('go'), checkB=$('check'), jumpB=$('jump'), stillB=$('still');
+const moveB=[$('mL'),$('mR'),$('mB2')];
+
+let lang='en', cur=null, theta=0, crossed=false, anim=null;
+let san=MAXSAN, ballStage=0.22, ballTarget=0.22, gone=false, you=1, bump=0, t0=performance.now();
+const T=()=>lang==='zh'?CN:EN;
+const d=n=>1+((Math.random()*n)|0);
+
+let AC=null;
+function tone(f0,f1,ms,vol){
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(f0,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(f1,AC.currentTime+ms/1000);
+    g.gain.setValueAtTime(.0001,AC.currentTime);
+    g.gain.linearRampToValueAtTime(vol,AC.currentTime+.015);
+    g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+ms/1000);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+ms/1000+.05);
+  }catch(e){}
+}
+function setSan(v,show){
+  const old=san; san=Math.max(0,Math.min(MAXSAN,Math.round(v)));
+  sanBar.style.width=(san/MAXSAN*100)+'%'; sanBar.classList.toggle('low',san<MAXSAN*.55);
+  sanN.textContent=san;
+  if(show!==false && san!==old){
+    const n=san-old; delta.textContent=(n>0?'+':'−')+Math.abs(n);
+    delta.style.color=n>0?'var(--calm)':'var(--hot)';
+    delta.classList.add('show'); setTimeout(()=>delta.classList.remove('show'),1500);
+  }
+}
+function line(w,t){ who.textContent=w||''; who.className='who'+(w==='Rue'?' r':w==='Marc'?' m':''); say.innerHTML=t; }
+function show(part,key,i){ cur=[part,key,i]; const b=T()[part][key][i]; line(b[0],b[1]); }
+function warp(n){ paper.classList.toggle('w1',n===1); paper.classList.toggle('w2',n===2); }
+function hide(...els){ els.forEach(e=>e.hidden=true); }
+
+/* ── the fold ── */
+function setFold(t){
+  theta=Math.max(0,Math.min(180,t));
+  const r=theta*Math.PI/180, s=Math.sin(r);
+  left.style.transform=`rotateY(${theta}deg)`;
+  shade.style.opacity=(s*0.5+(theta>90?0.3:0)).toFixed(3);
+  const u=crossed?1:(1-Math.cos(r))/2, lift=crossed?0:s*0.028, sc=crossed?1:(0.97+0.1*s).toFixed(3);
+  [[rue,POS.rue],[marc,POS.marc]].forEach(([el,p])=>{
+    el.style.left=((p.x0+(p.x1-p.x0)*u)*100)+'%';
+    el.style.top=(((p.y0+(p.y1-p.y0)*u)-lift)*100-RUEH)+'%';
+    el.style.transform=`scaleX(${u<0.5?p.f0:p.f1}) scale(${sc})`;
+  });
+}
+function tween(to,ms,done){
+  cancelAnimationFrame(anim);
+  const from=theta, start=performance.now();
+  const ease=u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
+  const run=now=>{ const u=Math.min(1,(now-start)/ms); setFold(from+(to-from)*ease(u));
+    if(u<1) anim=requestAnimationFrame(run); else done&&done(); };
+  anim=requestAnimationFrame(run);
+}
+
+/* ── the body in the studio, always moving ── */
+function frame(now){
+  const t=(now-t0)/1000;
+  ballStage += (ballTarget-ballStage)*0.045;
+  const w=Math.sin(t*0.62);
+  const pinch=Math.sqrt(Math.max(0.04,1-w*w*0.78));
+  const breath=1+0.09*Math.sin(t*2.3)+0.05*Math.sin(t*3.7+1.1);
+  const s=ballStage*pinch*breath*(gone?0:1);
+  const x=50+Math.sin(t*0.47)*9+Math.sin(t*1.13)*2.5-(you-1)*11;
+  const y=46+Math.sin(t*0.81)*4;
+  core.style.transform=`translate(-50%,-50%) scale(${s.toFixed(3)})`;
+  core.style.left=x+'%'; core.style.top=y+'%';
+  corona.style.transform=`translate(-50%,-50%) scale(${(s*1.5).toFixed(3)})`;
+  corona.style.left=x+'%'; corona.style.top=y+'%';
+  corona.style.opacity=(0.55+0.3*Math.sin(t*2.3)).toFixed(2);
+  wash.style.setProperty('--bx',x+'%'); wash.style.setProperty('--by',y+'%');
+  wash.style.opacity=Math.min(.9,Math.max(0,(s-0.35)*0.55)).toFixed(2);
+  room.style.transform=`translateX(${-(you-1)*2.2}%)`;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ── PART A ── */
+let stepA=0;
+function openingA(){
+  if(stepA<EN.A.OPENING.length){ show('A','OPENING',stepA); stepA++; }
+  if(stepA===3) warp(2);
+  if(stepA>=EN.A.OPENING.length){ goB.hidden=true; checkB.hidden=false; }
+}
+function checkHall(){
+  const u=(Math.random()*10)|0, tn=(Math.random()*10)|0;
+  let v=tn*10+u; if(v===0) v=100;
+  const lvl = v<=14?'extreme' : v<=35?'hard' : v<=70?'regular' : 'failure';
+  const good=lvl!=='failure';
+  rollEl.innerHTML=`d100 <b style="color:var(--fg)">${v}</b> · <span class="lv ${good?'good':'bad'}">${lvl}</span>`;
+  if(!good){ show('A','CHECK_FAIL',0); return; }
+  checkB.hidden=true;
+  crease.classList.add('on'); mA.classList.add('on'); mB.classList.add('on');
+  mA.style.left=(AX*100)+'%'; mA.style.top=(AY*100)+'%';
+  mB.style.left=(BX*100)+'%'; mB.style.top=(BY*100)+'%';
+  setFold(0); rue.classList.add('on'); marc.classList.add('on');
+  let i=0; goB.hidden=false;
+  goB.onclick=()=>{ if(i<EN.A.CHECK_SUCCESS.length){ show('A','CHECK_SUCCESS',i); i++; }
+    if(i>=EN.A.CHECK_SUCCESS.length){ goB.hidden=true; jumpB.hidden=false; } };
+  goB.onclick();
+}
+checkB.onclick=checkHall;
+jumpB.onclick=()=>{
+  jumpB.hidden=true; warp(0); show('A','JUMP',0);
+  tween(180,1700,()=>{
+    crossed=true; setFold(180); show('A','LANDING',0);
+    setTimeout(()=>tween(0,1400,()=>setTimeout(toStudio,700)),1600);
+  });
+};
+
+/* ── the handover ── */
+function toStudio(){
+  $('fade').classList.add('on');                       // dip to black
+  setTimeout(()=>show('A','TRANS',0), 800);            // the line, while it is dark
+  setTimeout(()=>{                                     // swap scenes unseen
+    $('sceneHall').classList.remove('on');
+    $('sceneRoom').classList.add('on');
+    t0=performance.now(); ballTarget=0.22;
+  }, 2000);
+  setTimeout(()=>$('fade').classList.remove('on'), 2600);
+  setTimeout(()=>{ stepB=0; goB.hidden=false; goB.onclick=introB; introB(); }, 3900);
+}
+
+/* ── PART B ── */
+let stepB=0;
+function introB(){
+  if(stepB<EN.B.INTRO.length){ show('B','INTRO',stepB); stepB++; }
+  if(stepB===2) ballTarget=0.5;
+  if(stepB>=EN.B.INTRO.length){ goB.hidden=true; ballTarget=0.95; panic(); }
+}
+function panic(){
+  moveB.forEach(b=>b.hidden=false); checkB.hidden=false;
+  checkB.onclick=checkB2;
+  moveB.forEach((b,i)=>b.onclick=()=>{
+    you = i===2 ? 1 : i;
+    const k=bump%EN.B.BUMPS.length; show('B','BUMPS',k); bump++;
+    setSan(san-d(4));
+    hitEl.style.opacity='.3'; tone(150,46,260,.26); setTimeout(()=>hitEl.style.opacity='0',230);
+    ballTarget=Math.min(1.7,ballTarget+0.12);
+  });
+}
+function checkB2(){
+  const u=(Math.random()*10)|0, tn=(Math.random()*10)|0;
+  let v=tn*10+u; if(v===0) v=100;
+  const good = v<=70;
+  rollEl.innerHTML=`d100 <b style="color:var(--fg)">${v}</b> · <span class="lv ${good?'good':'bad'}">${good?(v<=35?'hard':'regular'):'failure'}</span>`;
+  if(!good){ show('B','CHECK_FAIL',0); setSan(san-1); ballTarget=Math.min(1.9,ballTarget+0.2); tone(70,34,500,.18); return; }
+  moveB.forEach(b=>b.hidden=true); checkB.hidden=true;
+  show('B','CHECK_SUCCESS',0);
+  stillB.hidden=false;
+}
+stillB.onclick=()=>{
+  stillB.hidden=true;
+  const shrink=[1.4,0.8,0.22];
+  let i=0; goB.hidden=false;
+  goB.onclick=()=>{
+    if(i<EN.B.EXPLAIN.length){ show('B','EXPLAIN',i); ballTarget=shrink[i]; tone(240-i*40,120-i*20,420,.1); i++; }
+    if(i>=EN.B.EXPLAIN.length){
+      goB.hidden=true;
+      setTimeout(()=>{
+        ballTarget=0; gone=true;
+        room.style.filter='brightness(.72) saturate(1) contrast(1.02)';
+        setSan(san+d(6));
+        let k=0; goB.hidden=false;
+        goB.onclick=()=>{ if(k<EN.B.ENDING.length){ show('B','ENDING',k); k++; }
+          if(k>=EN.B.ENDING.length){ goB.hidden=true; $('endmark').hidden=false; } };
+        goB.onclick();
+      },1600);
+    }
+  };
+  goB.onclick();
+};
+
+/* ── chrome ── */
+function paintUI(){
+  const u=T().ui;
+  $('h1').textContent=u.title; $('lede').textContent=u.lede; $('sanLbl').textContent=u.san;
+  goB.textContent=u.go; checkB.textContent=u.check; jumpB.textContent=u.jump;
+  moveB[0].textContent=u.mL; moveB[1].textContent=u.mR; moveB[2].textContent=u.mB;
+  stillB.textContent=u.still; $('reset').textContent=u.reset; $('endmark').textContent=u.end;
+  $('home').textContent=u.home; $('home').href=HOME_URL;
+  /* the language button always shows the language you would switch TO */
+  $('lang').textContent=u.langLabel;
+}
+$('lang').onclick=()=>{
+  lang = lang==='zh' ? 'en' : 'zh';
+  document.body.dataset.lang=lang;
+  document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
+  paintUI();
+  if(cur) show(cur[0],cur[1],cur[2]);
+};
+$('reset').onclick=()=>{
+  cancelAnimationFrame(anim);
+  stepA=0; stepB=0; crossed=false; setFold(0); warp(1);
+  crease.classList.remove('on'); mA.classList.remove('on'); mB.classList.remove('on');
+  rue.classList.remove('on'); marc.classList.remove('on');
+  $('sceneRoom').classList.remove('on'); $('sceneHall').classList.add('on');
+  san=MAXSAN; setSan(MAXSAN,false); ballStage=0.22; ballTarget=0.22; gone=false; you=1; bump=0;
+  room.style.filter='brightness(.52) saturate(.9) contrast(1.06)';
+  rollEl.innerHTML=''; $('fade').classList.remove('on'); hide(checkB,jumpB,stillB,$('endmark'),...moveB);
+  checkB.onclick=checkHall; goB.hidden=false; goB.onclick=openingA; openingA();
+};
+paintUI(); setSan(MAXSAN,false); setFold(0);
+goB.onclick=openingA; openingA();
+</script>
+</body>
+</html>
