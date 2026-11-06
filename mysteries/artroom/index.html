@@ -3,14 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>The Origami Game</title>
+<title>The Origami Game — The College of Mysteries</title>
+<meta name="description" content="A corridor folded like paper, and a four-dimensional body crossing an art studio. A playable scene from The College of Mysteries.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Origami Game — The College of Mysteries">
+<meta property="og:description" content="A corridor folded like paper, and a four-dimensional body crossing an art studio. A playable scene from The College of Mysteries.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Noto+Serif+SC:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
-img{max-width:100%}
-[hidden]{display:none!important}
-</style>
 <style>
 /* Layout: one stage, two scenes — the hall folds, then the studio. Dialogue over it, controls beneath. */
 :root{
@@ -26,12 +24,26 @@ img{max-width:100%}
 body{background:var(--ink);color:var(--fg);font-family:var(--display);font-size:17px;line-height:1.55;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:24px 44px}
+  padding-block:max(24px,env(safe-area-inset-top,0px)) max(44px,env(safe-area-inset-bottom,0px))}
+img{max-width:100%}
 body[data-lang="zh"]{font-family:var(--cjk)}
 body[data-lang="zh"] h1{font-family:var(--cjk);letter-spacing:.08em}
 .wrap{max-width:1040px;margin:0 auto}
 h1{font-family:var(--title);font-weight:500;font-size:clamp(24px,4vw,38px);margin:0 0 8px;letter-spacing:.02em}
-.lede{color:var(--dim);margin:0 0 16px;max-width:64ch}
+.lede{color:var(--dim);margin:0;max-width:64ch}
+
+/* page chrome: title left, HOME + language right. Identical block on every scene page,
+   so the two site-level controls never move as you go from one scene to the next.
+   Everything that belongs to the scene itself stays down in .bar, under the stage. */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+.htext{flex:1 1 auto;min-width:0}
+.chrome{flex:0 0 auto;display:flex;gap:8px;padding-top:4px}
+.icbtn{min-width:70px;height:34px;padding:0 12px;display:grid;place-items:center;cursor:pointer;
+  background:transparent;color:var(--dim);border:1px solid var(--rule);border-radius:2px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  text-decoration:none;white-space:nowrap;transition:color .2s,border-color .2s}
+.icbtn:hover{background:transparent;color:var(--fg);border-color:var(--fg)}
+body[data-lang="zh"] .icbtn{font-family:var(--cjk);font-size:12.5px;letter-spacing:.08em;text-transform:none}
 
 .stage{position:relative;aspect-ratio:16/9;border:1px solid var(--rule);border-radius:3px;overflow:hidden;
   background:#05080A;perspective:1500px;perspective-origin:50% 48%}
@@ -131,8 +143,16 @@ body[data-lang="zh"] .endmark{font-family:var(--cjk);text-transform:none;letter-
 </head>
 <body>
 <div class="wrap">
-  <h1 id="h1">The Origami Game</h1>
-  <p class="lede" id="lede">They opened a door on the west side of the building and came out on the east. The corridors twist like paper folded too many times. What waits in the studio will cost a great deal more SAN.</p>
+  <div class="hdr">
+    <div class="htext">
+      <h1 id="h1">The Origami Game</h1>
+      <p class="lede" id="lede">They opened a door on the west side of the building and came out on the east. The corridors twist like paper folded too many times. What waits in the studio will cost a great deal more SAN.</p>
+    </div>
+    <div class="chrome">
+      <a class="icbtn" id="home" href="#">HOME</a>
+      <button class="icbtn" id="lang">中文</button>
+    </div>
+  </div>
 
   <div class="stage" id="stage">
 
@@ -179,8 +199,7 @@ body[data-lang="zh"] .endmark{font-family:var(--cjk);text-transform:none;letter-
     <button id="mR" hidden>Get out of its way →</button>
     <button id="mB2" hidden>Back toward the door</button>
     <button id="still" class="still" hidden>Stand still</button>
-    <button id="lang" class="ghost spacer">中文</button>
-    <button id="reset" class="ghost">Reset</button>
+    <button id="reset" class="ghost spacer">Reset</button>
   </div>
 </div>
 
@@ -195,7 +214,8 @@ const EN={
       lede:'They opened a door on the west side of the building and came out on the east. The corridors twist like paper folded too many times. What waits in the studio will cost a great deal more SAN.',
       san:'SAN', go:'Continue →', check:'Marc looks at it · Art 70', jump:'Climb the rail and jump',
       mL:'← Get out of its way', mR:'Get out of its way →', mB:'Back toward the door',
-      still:'Stand still', reset:'Reset', end:'End of scene'},
+      still:'Stand still', reset:'Reset', end:'End of scene',
+      home:'HOME', langLabel:'中文'},
   A:{
     OPENING:[
       ['Rue','Marc, the whole place is shaking! Is this an earthquake?'],
@@ -250,7 +270,8 @@ const CN={
       lede:'他们从楼西侧推开一扇门，却从东侧走了出来。整个空间都错乱了：走廊像一张被反复揉折的牛皮纸，扭来扭去，仿佛有一只看不见的手正在折它。而之后在画室里等着他们的东西，更是让人SAN值狂掉……',
       san:'SAN', go:'继续 →', check:'让 Marc 看一看 · 艺术 70', jump:'翻过栏杆，跳',
       mL:'← 往左躲', mR:'往右躲 →', mB:'退回门边',
-      still:'站着别动', reset:'重新开始', end:'本场景结束'},
+      still:'站着别动', reset:'重新开始', end:'本场景结束',
+      home:'主页', langLabel:'EN'},
   A:{
     OPENING:[
       ['Rue','Marc，这地方在摇晃！是地震吗？'],
@@ -296,6 +317,13 @@ const CN={
 /* ══════════════════════════════════════════════════════════════
    Nothing below this line needs editing for a translation.
    ══════════════════════════════════════════════════════════════ */
+/* ------------------------------------------------------------------
+   HOME_URL — the landing page every scene links back to.
+   If the landing page ever moves, THIS LINE IS THE ONLY ONE TO CHANGE
+   in this file. Nothing else here hard-codes the address.
+   ------------------------------------------------------------------ */
+const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
+
 const $=id=>document.getElementById(id);
 const POS={
   marc:{x0:0.100, y0:0.292, x1:0.848, y1:0.344, f0: 1, f1:-1},
@@ -492,10 +520,12 @@ function paintUI(){
   goB.textContent=u.go; checkB.textContent=u.check; jumpB.textContent=u.jump;
   moveB[0].textContent=u.mL; moveB[1].textContent=u.mR; moveB[2].textContent=u.mB;
   stillB.textContent=u.still; $('reset').textContent=u.reset; $('endmark').textContent=u.end;
+  $('home').textContent=u.home; $('home').href=HOME_URL;
+  /* the language button always shows the language you would switch TO */
+  $('lang').textContent=u.langLabel;
 }
-$('lang').onclick=e=>{
+$('lang').onclick=()=>{
   lang = lang==='zh' ? 'en' : 'zh';
-  e.target.textContent = lang==='zh' ? 'EN' : '中文';
   document.body.dataset.lang=lang;
   document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
   paintUI();
