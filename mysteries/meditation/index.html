@@ -168,6 +168,25 @@ body[data-lang="zh"] .note{font-size:14.5px}
    ------------------------------------------------------------------ */
 const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
 
+/* ──────────────────────────────────────────────────────────────
+   LANGUAGE IN THE URL — ?lang=zh opens this page in Chinese, and
+   switching language rewrites the address bar without reloading,
+   so the link in the bar always shows what is on screen. Links
+   out to the other pages carry the language along with them.
+   ────────────────────────────────────────────────────────────── */
+const urlLang=()=>new URLSearchParams(location.search).get('lang')==='zh'?'zh':'en';
+function pushLang(l){
+  const u=new URL(location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  history.replaceState(null,'',u);
+}
+function withLang(href,l){
+  const u=new URL(href,location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  return u.href;
+}
+
+
 /* ══════════════════════════════════════════════════════════════
    EN-SCRIPT — English lines.
    Every line is [speaker-class, speaker-name, text].
@@ -281,7 +300,7 @@ const say=$('say'), who=$('who'), flash=$('flash'), bgEl=$('bgEl'),
 
 const SKILL=50, MAXSAN=100;        // exactly even odds, tuned for the demo
 const ACTIONS=['hand','head','look','call','mind'];
-let lang='en', san=MAXSAN, dread=0, woken=false, phase='locked', AC=null, corrupt=null;
+let lang=urlLang(), san=MAXSAN, dread=0, woken=false, phase='locked', AC=null, corrupt=null;
 let taunt=0;                       // the shape works through its four lines in order
 let cur=null;                      // what is on screen now, so a language switch can repaint it
 
@@ -453,7 +472,7 @@ function paintUI(){
   $('h1').textContent=u.title; $('lede').textContent=u.lede;
   $('sanLbl').textContent=u.san; $('meta').textContent=u.meta;
   $('reset').textContent=u.reset; $('note').innerHTML=u.note;
-  $('home').textContent=u.home; $('home').href=HOME_URL;
+  $('home').textContent=u.home; $('home').href=withLang(HOME_URL,lang);
   /* the language button always shows the language you would switch TO */
   $('lang').textContent=u.langLabel;
   acts.querySelectorAll('button[data-a]').forEach(b=>b.textContent=u[b.dataset.a]);
@@ -465,7 +484,7 @@ $('lang').onclick=()=>{
   lang = lang==='zh' ? 'en' : 'zh';
   document.body.dataset.lang=lang;
   document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
-  paintUI();
+  pushLang(lang); paintUI();
   if(cur) paintLine(cur.path);     /* repaint the current line, uncorrupted */
 };
 
@@ -478,6 +497,8 @@ function reset(){
 }
 $('reset').onclick=reset;
 
+document.body.dataset.lang=lang;
+document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
 reset();
 </script>
 
