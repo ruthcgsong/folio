@@ -201,6 +201,25 @@
    ------------------------------------------------------------------ */
 const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
 
+/* ──────────────────────────────────────────────────────────────
+   LANGUAGE IN THE URL — ?lang=zh opens this page in Chinese, and
+   switching language rewrites the address bar without reloading,
+   so the link in the bar always shows what is on screen. Links
+   out to the other pages carry the language along with them.
+   ────────────────────────────────────────────────────────────── */
+const urlLang=()=>new URLSearchParams(location.search).get('lang')==='zh'?'zh':'en';
+function pushLang(l){
+  const u=new URL(location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  history.replaceState(null,'',u);
+}
+function withLang(href,l){
+  const u=new URL(href,location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  return u.href;
+}
+
+
 /* ===================== EN-SCRIPT ===================== */
 const EN={
   lang:'中文', home:'HOME', title:'Decipher the Wheel',
@@ -302,7 +321,7 @@ function render(){
 function paintText(){
   $('title').textContent=L.title; $('sub').textContent=L.sub; $('lang').textContent=L.lang;
   /* the language button always shows the language you would switch TO */
-  $('home').textContent=L.home; $('home').href=HOME_URL;
+  $('home').textContent=L.home; $('home').href=withLang(HOME_URL,lang==='cn'?'zh':'en');
   $('lamp').textContent=dark?L.lampOff:L.lampOn;
   $('c-motto').textContent=L.c_motto; $('motto').innerHTML=L.motto;
   $('c-gloss').textContent=L.c_gloss; $('gloss').textContent=L.gloss;
@@ -361,8 +380,10 @@ function check(){
 }
 
 $('lang').onclick=()=>{ lang=(lang==='en')?'cn':'en'; L=(lang==='en')?EN:CN;
-  document.documentElement.lang=(lang==='en')?'en':'zh'; paintText(); };
+  document.documentElement.lang=(lang==='en')?'en':'zh';
+  pushLang(lang==='cn'?'zh':'en'); paintText(); };
 
+if(urlLang()==='zh'){ lang='cn'; L=CN; document.documentElement.lang='zh'; }
 buildRings(); paintText();
 requestAnimationFrame(()=>setTimeout(()=>document.body.classList.remove('boot'),70));
 </script>
