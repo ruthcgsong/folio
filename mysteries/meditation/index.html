@@ -1,24 +1,48 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>What the Meditation Let In</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>A Meditation Gone Wrong — The College of Mysteries</title>
+<meta name="description" content="Sleep paralysis, four controls that refuse, and one skill check that ends the scene. A playable scene from The College of Mysteries.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A Meditation Gone Wrong — The College of Mysteries">
+<meta property="og:description" content="Sleep paralysis, four controls that refuse, and one skill check that ends the scene. A playable scene from The College of Mysteries.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Noto+Serif+SC:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: the window fills the stage, the shape stands in front of it, SAN and the roll read across the top. */
 :root{
   --void:#08090B; --panel:#131519; --rule:#24272C; --ink:#DCDFE3; --dim:#80858C;
   --ivy:#E86FA8; --threat:#C4544A; --rue:#E8B86A; --good:#7CF5C4;
   --display:'Newsreader',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --cjk:'Noto Serif SC','Songti SC',serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+img{max-width:100%}
+[hidden]{display:none!important}
 body{background:var(--void);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:26px 48px}
+  padding-block:max(26px,env(safe-area-inset-top,0px)) max(48px,env(safe-area-inset-bottom,0px))}
+body[data-lang="zh"]{font-family:var(--cjk)}
+body[data-lang="zh"] h1{font-family:var(--cjk);letter-spacing:.04em}
 .wrap{max-width:880px;margin:0 auto}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
 h1{font-weight:500;font-size:clamp(26px,5.5vw,38px);margin:0 0 8px;letter-spacing:-.01em}
-.lede{color:var(--dim);margin:0 0 18px;max-width:62ch}
+.lede{color:var(--dim);margin:0;max-width:62ch}
+
+/* page chrome: title left, HOME + language right. Identical block on every scene page,
+   so the two site-level controls never move as you go from one scene to the next.
+   Everything that belongs to the scene itself stays below the stage. */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px}
+.htext{flex:1 1 auto;min-width:0}
+.chrome{flex:0 0 auto;display:flex;gap:8px;padding-top:4px}
+.icbtn{min-width:70px;height:34px;padding:0 12px;display:grid;place-items:center;cursor:pointer;
+  background:transparent;color:var(--dim);border:1px solid var(--rule);border-radius:2px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  text-decoration:none;white-space:nowrap;transition:color .2s,border-color .2s}
+.icbtn:hover{color:var(--ink);border-color:var(--ink)}
+body[data-lang="zh"] .icbtn{font-family:var(--cjk);font-size:12.5px;letter-spacing:.08em;text-transform:none}
 
 .stage{position:relative;aspect-ratio:16/9;border:1px solid var(--rule);overflow:hidden;background:#06070A}
 .bg{position:absolute;inset:0;background:url("window.png") no-repeat center 47%/auto 92%;
@@ -40,6 +64,7 @@ h1{font-weight:500;font-size:clamp(26px,5.5vw,38px);margin:0 0 8px;letter-spacin
 .slab{position:absolute;left:0;right:0;bottom:0;padding:44px 20px 18px;
   background:linear-gradient(transparent,rgba(4,5,8,.93) 44%)}
 .who{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+body[data-lang="zh"] .who{font-family:var(--cjk);text-transform:none;letter-spacing:.06em;font-size:13px}
 .who.r{color:var(--rue)} .who.i{color:var(--ivy)} .who.t{color:var(--threat)} .who.g{color:var(--good)}
 .say{margin:0;font-size:clamp(15px,2.4vw,20px);max-width:56ch;min-height:3.6em;font-variant-ligatures:none}
 .say em{font-style:italic;color:var(--dim)}
@@ -63,10 +88,13 @@ h1{font-weight:500;font-size:clamp(26px,5.5vw,38px);margin:0 0 8px;letter-spacin
 .roll .lv{letter-spacing:.14em}
 .roll .lv.good{color:var(--good)} .roll .lv.bad{color:var(--threat)}
 
-.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
-@media (max-width:620px){.acts{grid-template-columns:repeat(2,1fr)}}
+/* five actions now: four that refuse, one that resolves */
+.acts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+@media (max-width:760px){.acts{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:460px){.acts{grid-template-columns:repeat(2,1fr)}}
 button{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;
   background:transparent;color:var(--ink);border:1px solid var(--rule);padding:11px 10px;min-width:0}
+body[data-lang="zh"] button{font-family:var(--cjk);text-transform:none;letter-spacing:.04em;font-size:13px}
 button:hover:not(:disabled){border-color:var(--ink)}
 button.deny{animation:deny .32s}
 @keyframes deny{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
@@ -75,18 +103,33 @@ button.live{border-color:var(--ivy);color:var(--ivy);animation:arrive .5s ease-o
 button.live:hover{background:var(--ivy);color:var(--void)}
 button:disabled{opacity:.26;cursor:default}
 button:focus-visible{outline:2px solid var(--ivy);outline-offset:2px}
+.endmark{display:inline-flex;align-items:center;gap:11px;padding:11px 2px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.endmark::before,.endmark::after{content:"";width:30px;height:1px;background:var(--rule)}
+body[data-lang="zh"] .endmark{font-family:var(--cjk);text-transform:none;letter-spacing:.14em;font-size:13px}
 .bar{display:flex;gap:8px;align-items:center;margin-top:10px}
 .bar .ghost{border-color:var(--rule);color:var(--dim)}
 .meta{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-left:auto}
+body[data-lang="zh"] .meta{font-family:var(--cjk);text-transform:none;letter-spacing:.04em;font-size:12.5px}
 .note{margin-top:24px;border-top:1px solid var(--rule);padding-top:14px;font-size:15px;color:var(--dim);max-width:72ch}
 .note b{color:var(--ink);font-weight:500}
+body[data-lang="zh"] .note{font-size:14.5px}
 @media (prefers-reduced-motion:reduce){.bg,.lit{animation:none}.deny{animation:none}}
 </style>
+</head>
+<body>
 
 <div class="wrap">
-  <p class="eyebrow">College of Mysteries · Act I · Rue’s room, 02:40</p>
-  <h1>What the Meditation Let In</h1>
-  <p class="lede">She meditated with the stone under her tongue and went too far down. Four things she could try. Three of them are not going to work.</p>
+  <div class="hdr">
+    <div class="htext">
+      <h1 id="h1">A Meditation Gone Wrong</h1>
+      <p class="lede" id="lede">Rue meditates, falls asleep, and opens her eyes into a room that is half hers and half nightmare.</p>
+    </div>
+    <div class="chrome">
+      <a class="icbtn" id="home" href="#">HOME</a>
+      <button class="icbtn" id="lang">中文</button>
+    </div>
+  </div>
 
   <div class="stage" id="stage">
     <div class="bg" id="bgEl"></div>
@@ -98,31 +141,138 @@ button:focus-visible{outline:2px solid var(--ivy);outline-offset:2px}
     </svg>
     <div class="flash" id="flash"></div>
     <div class="top">
-      <span>SAN</span><span class="track"><i id="sanbar" style="width:100%"></i></span>
+      <span id="sanLbl">SAN</span><span class="track"><i id="sanbar" style="width:100%"></i></span>
       <b id="sann">100</b><span class="hitnum" id="hitnum"></span>
       <span class="roll" id="roll"></span>
     </div>
     <div class="slab">
       <div class="who r" id="who">Rue</div>
-      <p class="say" id="say">Focus… breathe… in… out… <em>Something is standing between the bed and the window.</em></p>
+      <p class="say" id="say"></p>
     </div>
   </div>
 
-  <div class="acts" id="acts">
-    <button data-a="hand">Move your hand</button>
-    <button data-a="head">Turn your head</button>
-    <button data-a="call">Call out</button>
-    <button data-a="mind">Mind-reading</button>
-  </div>
+  <div class="acts" id="acts"></div>
   <div class="bar">
     <button class="ghost" id="reset">Reset</button>
     <span class="meta" id="meta">Mind-reading 50 · hard 25</span>
   </div>
 
-  <p class="note"><b>What the roll decides.</b> Mind-reading is the only action that resolves the scene, and it can be retried as often as the player likes — each attempt costs SAN on a failure, so the question is how much of herself she is willing to spend finding out what she is looking at. A regular success tells her what the shape is. A Hard success gives some SAN back, lights the window, and shows her one thing in the room that is not hers.</p>
+  <p class="note" id="note"></p>
 </div>
 
 <script>
+/* ------------------------------------------------------------------
+   HOME_URL — the landing page every scene links back to.
+   If the landing page ever moves, THIS LINE IS THE ONLY ONE TO CHANGE
+   in this file. Nothing else here hard-codes the address.
+   ------------------------------------------------------------------ */
+const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
+
+/* ══════════════════════════════════════════════════════════════
+   EN-SCRIPT — English lines.
+   Every line is [speaker-class, speaker-name, text].
+   Classes: r = Rue, t = the shape, i = Ivy, '' = narration.
+   ══════════════════════════════════════════════════════════════ */
+const EN={
+  ui:{
+    title:'A Meditation Gone Wrong',
+    lede:'Rue meditates, falls asleep, and opens her eyes into a room that is half hers and half nightmare.',
+    san:'SAN', meta:'Mind-reading 50 · hard 25',
+    hand:'Move your hand', head:'Turn your head', look:'Look up',
+    call:'Call out', mind:'Mind-reading',
+    door:'Someone is at the door', cont:'Continue →', reset:'Reset', end:'End of scene',
+    home:'HOME', langLabel:'中文',
+    note:'Every wrong move costs Rue SAN. Mind-reading is the one skill that can get her out of this — whether it works is down to the dice.'
+  },
+  open:['r','Rue','<em>Where am I? Am I still dreaming? Why — why can’t I move? There’s something in front of the window. I can’t see it clearly.</em>'],
+  deny:{
+    hand:['r','Rue','<em>My fingers are right there. I can feel the sheet under them. The order goes out and nothing takes it.</em>'],
+    head:['r','Rue','<em>My neck won’t turn. Somebody wake me up — please.</em>'],
+    look:['r','Rue','<em>My eyes won’t go up. What is that — the curtain? Hanging in the shape of a rat.</em>'],
+    call:['r','Rue','<em>Air goes in and nothing comes out. Will — no, he’s not in the dorms. Marc, then. I can’t reach my phone. I can’t move.</em>']
+  },
+  taunt:[
+    ['t','The Rat','You don’t even remember my name. You just enjoyed your little experiment. And I was the subject.'],
+    ['t','The Rat','Open them wider. You wanted to see how your masterpiece turned out.'],
+    ['t','The Rat','No one is coming. A child, you’ll say. Or a monster in the making.'],
+    ['t','The Rat','Remember how you reveled in our fear? Now it’s my turn to play.']
+  ],
+  fail:['r','Rue','<em>I can only read a living mind. This one is hollow.</em>'],
+  ok:[
+    ['r','Rue','<em>Whatever that girl did, I’m not her. Not anymore.</em>'],
+    ['r','Rue','<em>Someone’s knocking on my door.</em>']
+  ],
+  hard:[
+    ['r','Rue','<em>No ghost in this room. Nothing here but my own head, and I only have to wait it out.</em>'],
+    ['r','Rue','<em>Someone’s knocking on my door.</em>']
+  ],
+  rescue:[
+    ['r','Rue','<em>Is that Marc? Will? — no. That’s Ivy.</em>'],
+    ['i','Ivy','Rue. Look at me. Move your fingers. Toes. Now make a sound, any sound.'],
+    ['r','Rue','Ahh!! Ivy, the shadow — the rat! It lunged at me —'],
+    ['i','Ivy','Easy. Easy. Sleep paralysis. Your mind woke up and your body stayed asleep, so it filled the dark in for you.'],
+    ['r','Rue','It was the rat. The one I had a little experiment with, when I was little.'],
+    ['i','Ivy','Then lucky for you the serial killer of white mice got here first.'],
+    ['r','Rue','Ivy, I was only meditating. And then you came through my door like a knight in shining — lab coat?'],
+    ['i','Ivy','A knight, huh. You called me a cold-blooded Frankenstein last week.'],
+    ['i','Ivy','Open your mouth. Mmm... Meditating with a rock under your tongue.'],
+    ['i','Ivy','…Never mind. Sit up for me. I’ll open the window and let some air in.']
+  ]
+};
+
+/* ══════════════════════════════════════════════════════════════
+   CN-SCRIPT — 中文台词。只需修改这一块；人物名保持英文不译。
+   ══════════════════════════════════════════════════════════════ */
+const CN={
+  ui:{
+    title:'冥想事故',
+    lede:'Rue 正在练习冥想，结果却滑入了梦乡。当她醒来时，房间还是那个房间，却又像一场噩梦。',
+    san:'SAN', meta:'读心 50 · 困难 25',
+    hand:'动动手', head:'转动脑袋', look:'抬眼看',
+    call:'叫人', mind:'读心',
+    door:'有人在敲门', cont:'继续 →', reset:'重新开始', end:'本场景结束',
+    home:'主页', langLabel:'EN',
+    note:'Rue 的任何一个错误举动都会掉 SAN！她可以使用读心术技能，但是否能成功还是要看运气。'
+  },
+  open:['r','Rue','<em>我在哪儿？我还在梦中吗？我，我怎么不能动了？好像有什么东西在窗户那里。我没法抬眼看清楚。</em>'],
+  deny:{
+    hand:['r','Rue','<em>我能感觉到我的手指，它们却不听使唤。</em>'],
+    head:['r','Rue','<em>我的脖子不听使唤！快来个人叫醒我吧！</em>'],
+    look:['r','Rue','<em>我没法抬眼看东西。那是什么？窗帘吗？那形状好像一只老鼠！</em>'],
+    call:['r','Rue','<em>我不能呼吸了。Will！不，他不住校，Marc！我没法打电话，我动不了！</em>']
+  },
+  taunt:[
+    ['t','老鼠','还记得我叫什么吗？你当时只顾着弄你的实验了吧。而我就是你的试验品！'],
+    ['t','老鼠','睁大你的眼睛看看。你不想看看你的杰作了吗？'],
+    ['t','老鼠','没人会来的。只是个孩子？还是说，叫你小恶魔更合适？'],
+    ['t','老鼠','还记得当时你是怎么对我们的吗？现在轮到你了！']
+  ],
+  fail:['r','Rue','<em>我只能读取活人的想法。而这家伙的脑袋是空的！</em>'],
+  ok:[
+    ['r','Rue','<em>不论“她”干了什么，我都不是她了。不是了！</em>'],
+    ['r','Rue','<em>有人在敲门？</em>']
+  ],
+  hard:[
+    ['r','Rue','<em>这里没有鬼。一切都是我想象出来的。我只要静静地等待着它消失就好了。</em>'],
+    ['r','Rue','<em>有人在敲门？</em>']
+  ],
+  rescue:[
+    ['r','Rue','<em>是 Marc 吗？Will？竟然是 Ivy？！</em>'],
+    ['i','Ivy','Rue，动动手指试试？然后，脚趾。对，然后试着叫出声来，多大声都没关系。'],
+    ['r','Rue','啊！！——Ivy，那个黑影，不，是只老老老鼠！'],
+    ['i','Ivy','淡定，淡定。你刚刚只是睡眠麻痹了而已，对，俗称鬼压床。半梦半醒之间，你会把影子看成最吓人的东西。'],
+    ['r','Rue','那是一只老鼠！我小时候用它做过……实验来着。'],
+    ['i','Ivy','那你还真是走运，小白鼠杀手在此，哪只耗子能逃过我的手掌心？'],
+    ['r','Rue','我刚刚只是在练习冥想……然后你就到了，简直是神兵天降！'],
+    ['i','Ivy','神兵？上周某些人还说我是科学怪人来着呢。'],
+    ['i','Ivy','来，张嘴。嗯……？把小石头含在嘴里做冥想吗？'],
+    ['i','Ivy','……唉，算了。你先坐起来，我打开窗透透气吧。']
+  ]
+};
+
+/* ══════════════════════════════════════════════════════════════
+   Nothing below this line needs editing for a translation.
+   ══════════════════════════════════════════════════════════════ */
 const GLYPHS="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ◺◹◸⟊⟁⌬⍉⌇≋∷⊹";
 const $=id=>document.getElementById(id);
 const say=$('say'), who=$('who'), flash=$('flash'), bgEl=$('bgEl'),
@@ -130,8 +280,12 @@ const say=$('say'), who=$('who'), flash=$('flash'), bgEl=$('bgEl'),
       mike=$('mike'), pulse=$('pulse');
 
 const SKILL=50, MAXSAN=100;        // exactly even odds, tuned for the demo
-let san=MAXSAN, dread=0, woken=false, phase='locked', AC=null, corrupt=null;
+const ACTIONS=['hand','head','look','call','mind'];
+let lang='en', san=MAXSAN, dread=0, woken=false, phase='locked', AC=null, corrupt=null;
+let taunt=0;                       // the shape works through its four lines in order
+let cur=null;                      // what is on screen now, so a language switch can repaint it
 
+const T=()=>lang==='zh'?CN:EN;
 const d=n=>1+((Math.random()*n)|0);
 
 function thump(hard){
@@ -172,11 +326,22 @@ function setDread(v){
   mike.classList.toggle('float',woken);
 }
 function clearShades(){ woken=false; mike.classList.remove('float'); mike.style.opacity='0'; mike.style.transform='scale(.9)'; }
+function wake(){ if(woken) return; woken=true; setDread(1.4); }
 
+/* ── the dialogue slab ───────────────────────────────────────── */
 function stopCorrupt(){ if(corrupt){clearInterval(corrupt); corrupt=null;} }
-function setLine(w,html,distort){
+
+/* a line is addressed by path, not by value, so switching language repaints whatever is up */
+function pick(path){
+  let v=T();
+  for(const step of path) v=v[step];
+  return v;
+}
+function paintLine(path,distort){
   stopCorrupt();
-  who.textContent=w||''; who.className='who'+(w==='Rue'?' r':w==='Ivy'?' i':w==='—'?' g':(w?' t':''));
+  cur={path,distort};
+  const [cls,name,html]=pick(path);
+  who.textContent=name||''; who.className='who'+(cls?' '+cls:'');
   if(!distort){ say.innerHTML=html; return; }
   const plain=html.replace(/<[^>]+>/g,'');
   let p=distort;
@@ -188,49 +353,51 @@ function setLine(w,html,distort){
     }
     say.innerHTML=out;
     p-=distort/30;
-    if(p<=0.02){ stopCorrupt(); say.innerHTML=html; }
+    if(p<=0.02){ stopCorrupt(); say.innerHTML=pick(path)[2]; }
   },70);
 }
-function sequence(beats,done){
+/* play several lines in turn, each addressed the same way */
+function sequence(paths,done){
   let i=0;
-  const run=()=>{ if(i>=beats.length){ done&&done(); return; }
-    const b=beats[i]; setLine(b[0],b[1],b[2]); i++; setTimeout(run, b[2]?2800:2200); };
+  const run=()=>{ if(i>=paths.length){ done&&done(); return; }
+    const p=paths[i]; paintLine(p.path||p, p.distort); i++;
+    setTimeout(run, p.distort?2800:2400); };
   run();
 }
-function wake(){ if(woken) return; woken=true; setDread(1.4); }   /* only "Call out" summons it */
+
+/* ── the five controls ───────────────────────────────────────── */
+function buildActs(){
+  const u=T().ui;
+  acts.innerHTML='';
+  ACTIONS.forEach(a=>{
+    const b=document.createElement('button');
+    b.dataset.a=a; b.textContent=u[a];
+    acts.appendChild(b);
+  });
+}
+function lockActs(on){ acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=on); }
 
 function openDoor(){
   if(phase==='door'||document.getElementById('door')) return;
   phase='door';
-  acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=true);
+  lockActs(true);
   setTimeout(()=>{
     const b=document.createElement('button');
-    b.className='live'; b.id='door'; b.textContent='Someone is at the door';
+    b.className='live'; b.id='door'; b.textContent=T().ui.door;
     acts.appendChild(b);
     b.onclick=()=>{ b.remove(); rescue(); };
   },1200);
 }
 
-const DENY={
- hand:['Rue','My fingers are right there. I can feel the sheet under them. The order goes out and nothing takes it.'],
- head:['Rue','I can’t look up. My eyes will move. The rest of me won’t come with them.'],
- call:['Rue','Air goes in and nothing comes out. Will — no, he’s not in the dorms. Marc, then. I can’t reach my phone, I can’t move…']
-};
-const TAUNT=[
- ['Old Mike','“Remember us, Rue? Remember how you reveled in our fear?”'],
- ['The rat','“Remember me. Your little experiment. And I was your little subject.”'],
- ['The rat','“A child? Or a monster in the making?”'],
- ['Old Mike','“You keep the door shut on us and then you come down here and knock.”']
-];
-
+/* a refused control: Rue's own line, then the shape answers it */
 function deny(btn,a){
-  if(a==='call') wake();
+  wake();
   btn.classList.add('deny'); setTimeout(()=>btn.classList.remove('deny'),340);
-  const loss=d(6); hit(loss,false); if(woken) setDread(dread+0.6);
+  hit(d(6),false); setDread(dread+0.6);
   say.classList.remove('shake'); void say.offsetWidth; say.classList.add('shake');
-  const beats=[[DENY[a][0],DENY[a][1]]];
-  if(a==='call') beats.push(TAUNT[0]);
-  sequence(beats);
+  const k=taunt%EN.taunt.length; taunt++;
+  lockActs(true);
+  sequence([['deny',a],['taunt',k]], ()=>{ if(phase==='locked') lockActs(false); });
 }
 
 function mindRead(){
@@ -240,45 +407,37 @@ function mindRead(){
   const lvl = v<=Math.floor(SKILL/5)?'extreme' : v<=Math.floor(SKILL/2)?'hard'
             : v<=SKILL?'regular' : 'failure';
   const good=lvl!=='failure';
-  rollEl.innerHTML=`d100 <b>${v}</b> vs 45 <span class="lv ${good?'good':'bad'}">${lvl}</span>`;
-  acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=true);
-  const unlock=()=>acts.querySelectorAll('button[data-a]').forEach(b=>b.disabled=false);
+  rollEl.innerHTML=`d100 <b>${v}</b> vs ${SKILL} <span class="lv ${good?'good':'bad'}">${lvl}</span>`;
+  lockActs(true);
 
   if(lvl==='failure'){
-    hit(d(10),true); if(woken) setDread(dread+1.2);
-    sequence([
-      ['Rue','Mind-reading failed. I can’t reach it, I still can’t move, and it hasn’t gone anywhere.',0.9]
-    ], unlock);
+    hit(d(10),true); setDread(dread+1.2);
+    sequence([{path:['fail'],distort:0.9}], ()=>lockActs(false));
   } else if(lvl==='regular'){
     clearShades(); setDread(0);
-    sequence([
-      ['Rue','There’s nothing in him to read. He’s made of me — and that girl would have enjoyed this. I’m the one he scares, so I’m not her any more.'],
-      ['Rue','Someone’s knocking on my door.']
-    ], openDoor);
+    sequence([['ok',0],['ok',1]], openDoor);
   } else {
     hit(-d(10),false); clearShades(); setDread(0); bgEl.classList.add('half');
-    sequence([
-      ['Rue','Nothing in him to read — he’s made of me, and that girl would have enjoyed this. I can’t stop shaking, so she isn’t who I am.'],
-      ['Rue','And underneath him, something that isn’t mine at all. Patient. Coming from somewhere past the window.'],
-      ['Rue','Someone’s knocking on my door.']
-    ], openDoor);
+    sequence([['hard',0],['hard',1]], openDoor);
   }
 }
 
 function rescue(){
   phase='free'; clearShades();
   bgEl.classList.remove('half'); bgEl.classList.add('full');
-  const beats=[
-    ['Ivy','“Rue? I heard noises.” <em>The door gives on the second shoulder.</em>'],
-    ['Ivy','“Deep breaths. Can you move your fingers for me?”'],
-    ['Rue','Ivy — Old Mike. The mouse. They were here.'],
-    ['Ivy','“You just had a sleep paralysis. Your mind woke up and your body didn’t.”'],
-    ['Rue','What if that girl in the dreams is who I actually am?'],
-    ['Ivy','“…Move over.” <em>She sits on the edge of the bed, takes the pebble, and turns it over twice in the dark. She doesn’t leave.</em>']
-  ];
   let i=0;
-  const b=document.createElement('button'); b.className='live'; b.textContent='Continue →'; acts.appendChild(b);
-  const step=()=>{ if(i>=beats.length){ b.remove(); return; } setLine(beats[i][0],beats[i][1]); i++; };
+  const b=document.createElement('button'); b.className='live'; b.id='cont';
+  b.textContent=T().ui.cont; acts.appendChild(b);
+  const step=()=>{
+    paintLine(['rescue',i]); i++;
+    /* the button goes away with the last line, so the scene ends on a line and not on a dead click */
+    if(i>=EN.rescue.length){
+      b.remove();
+      const e=document.createElement('span');
+      e.className='endmark'; e.id='endmark'; e.textContent=T().ui.end;
+      acts.appendChild(e);
+    }
+  };
   b.onclick=step; step();
 }
 
@@ -287,14 +446,40 @@ acts.addEventListener('click',e=>{
   if(!btn||btn.disabled||phase!=='locked') return;
   if(btn.dataset.a==='mind') mindRead(); else deny(btn,btn.dataset.a);
 });
-$('reset').onclick=()=>{
-  stopCorrupt(); phase='locked'; woken=false; setSan(MAXSAN); setDread(0);
-  bgEl.classList.remove('half','full'); rollEl.innerHTML=''; hitNum.classList.remove('show');
-  acts.innerHTML='<button data-a="hand">Move your hand</button><button data-a="head">Turn your head</button>'+
-    '<button data-a="call">Call out</button><button data-a="mind">Mind-reading</button>';
-  setLine('Rue','Focus… breathe… in… out… <em>Something is standing between the bed and the window.</em>');
+
+/* ── chrome ──────────────────────────────────────────────────── */
+function paintUI(){
+  const u=T().ui;
+  $('h1').textContent=u.title; $('lede').textContent=u.lede;
+  $('sanLbl').textContent=u.san; $('meta').textContent=u.meta;
+  $('reset').textContent=u.reset; $('note').innerHTML=u.note;
+  $('home').textContent=u.home; $('home').href=HOME_URL;
+  /* the language button always shows the language you would switch TO */
+  $('lang').textContent=u.langLabel;
+  acts.querySelectorAll('button[data-a]').forEach(b=>b.textContent=u[b.dataset.a]);
+  const door=$('door'); if(door) door.textContent=u.door;
+  const cont=$('cont'); if(cont) cont.textContent=u.cont;
+  const end=$('endmark'); if(end) end.textContent=u.end;
+}
+$('lang').onclick=()=>{
+  lang = lang==='zh' ? 'en' : 'zh';
+  document.body.dataset.lang=lang;
+  document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
+  paintUI();
+  if(cur) paintLine(cur.path);     /* repaint the current line, uncorrupted */
 };
-setSan(MAXSAN); setDread(0);
+
+function reset(){
+  stopCorrupt(); phase='locked'; woken=false; taunt=0;
+  setSan(MAXSAN); setDread(0);
+  bgEl.classList.remove('half','full'); rollEl.innerHTML=''; hitNum.classList.remove('show');
+  buildActs(); paintUI();
+  paintLine(['open']);
+}
+$('reset').onclick=reset;
+
+reset();
 </script>
 
-</body></html>
+</body>
+</html>
