@@ -324,6 +324,25 @@ const CN={
    ------------------------------------------------------------------ */
 const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
 
+/* ──────────────────────────────────────────────────────────────
+   LANGUAGE IN THE URL — ?lang=zh opens this page in Chinese, and
+   switching language rewrites the address bar without reloading,
+   so the link in the bar always shows what is on screen. Links
+   out to the other pages carry the language along with them.
+   ────────────────────────────────────────────────────────────── */
+const urlLang=()=>new URLSearchParams(location.search).get('lang')==='zh'?'zh':'en';
+function pushLang(l){
+  const u=new URL(location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  history.replaceState(null,'',u);
+}
+function withLang(href,l){
+  const u=new URL(href,location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  return u.href;
+}
+
+
 const $=id=>document.getElementById(id);
 const POS={
   marc:{x0:0.100, y0:0.292, x1:0.848, y1:0.344, f0: 1, f1:-1},
@@ -339,7 +358,7 @@ const paper=$('paper'), left=$('left'), shade=$('shade'), crease=$('crease'),
       say=$('say'), who=$('who'), goB=$('go'), checkB=$('check'), jumpB=$('jump'), stillB=$('still');
 const moveB=[$('mL'),$('mR'),$('mB2')];
 
-let lang='en', cur=null, theta=0, crossed=false, anim=null;
+let lang=urlLang(), cur=null, theta=0, crossed=false, anim=null;
 let san=MAXSAN, ballStage=0.22, ballTarget=0.22, gone=false, you=1, bump=0, t0=performance.now();
 const T=()=>lang==='zh'?CN:EN;
 const d=n=>1+((Math.random()*n)|0);
@@ -520,12 +539,13 @@ function paintUI(){
   goB.textContent=u.go; checkB.textContent=u.check; jumpB.textContent=u.jump;
   moveB[0].textContent=u.mL; moveB[1].textContent=u.mR; moveB[2].textContent=u.mB;
   stillB.textContent=u.still; $('reset').textContent=u.reset; $('endmark').textContent=u.end;
-  $('home').textContent=u.home; $('home').href=HOME_URL;
+  $('home').textContent=u.home; $('home').href=withLang(HOME_URL,lang);
   /* the language button always shows the language you would switch TO */
   $('lang').textContent=u.langLabel;
 }
 $('lang').onclick=()=>{
   lang = lang==='zh' ? 'en' : 'zh';
+  pushLang(lang);
   document.body.dataset.lang=lang;
   document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
   paintUI();
@@ -542,6 +562,8 @@ $('reset').onclick=()=>{
   rollEl.innerHTML=''; $('fade').classList.remove('on'); hide(checkB,jumpB,stillB,$('endmark'),...moveB);
   checkB.onclick=checkHall; goB.hidden=false; goB.onclick=openingA; openingA();
 };
+document.body.dataset.lang=lang;
+document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
 paintUI(); setSan(MAXSAN,false); setFold(0);
 goB.onclick=openingA; openingA();
 </script>
