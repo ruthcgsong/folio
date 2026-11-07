@@ -257,6 +257,25 @@ input[type=checkbox]{accent-color:var(--ink)}
    ────────────────────────────────────────────────────────────── */
 const HOME_URL='https://ruthcgsong.github.io/folio/mysteries/';
 
+/* ──────────────────────────────────────────────────────────────
+   LANGUAGE IN THE URL — ?lang=zh opens this page in Chinese, and
+   switching language rewrites the address bar without reloading,
+   so the link in the bar always shows what is on screen. Links
+   out to the other pages carry the language along with them.
+   ────────────────────────────────────────────────────────────── */
+const urlLang=()=>new URLSearchParams(location.search).get('lang')==='zh'?'zh':'en';
+function pushLang(l){
+  const u=new URL(location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  history.replaceState(null,'',u);
+}
+function withLang(href,l){
+  const u=new URL(href,location.href);
+  if(l==='zh') u.searchParams.set('lang','zh'); else u.searchParams.delete('lang');
+  return u.href;
+}
+
+
 /* ══════════════════════════════════════════════════════════════
    EN-SCRIPT — English lines, one block per lens.
    ══════════════════════════════════════════════════════════════ */
@@ -309,7 +328,7 @@ const CN={
 
 /* Nothing below needs editing for a translation. */
 const VAR={none:'--dim',marc:'--marc',will:'--will',ivy:'--ivy',rue:'--rue'};
-let lang='en', curLens='none';
+let lang=urlLang(), curLens='none';
 const T=()=>lang==='zh'?CN:EN;
 
 const stage=document.getElementById('stage'), halo=document.getElementById('halo'),
@@ -353,7 +372,7 @@ document.querySelectorAll('.lens').forEach(b=>b.onclick=()=>setLens(b.dataset.k)
 
 function paintChrome(){
   const u=T().ui, home=document.getElementById('home'), langb=document.getElementById('lang');
-  home.href=HOME_URL; home.textContent=u.home;
+  home.href=withLang(HOME_URL,lang); home.textContent=u.home;
   /* the language button always shows the language you would switch TO */
   langb.textContent=u.langLabel;
   document.getElementById('lede').textContent=u.lede;
@@ -365,11 +384,14 @@ function paintChrome(){
 }
 document.getElementById('lang').onclick=()=>{
   lang = lang==='zh' ? 'en' : 'zh';
+  pushLang(lang);
   document.body.dataset.lang=lang;
   document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
   paintChrome(); paintArt(); setLens(curLens);
 };
 
+document.body.dataset.lang=lang;
+document.documentElement.lang = lang==='zh' ? 'zh-Hans' : 'en';
 paintChrome(); paintArt(); setRadius(); setLens('none');
 </script>
 </body>
